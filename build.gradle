@@ -33,10 +33,10 @@ dependencies {
     // tag::actuator[]
     compile("org.springframework.boot:spring-boot-starter-actuator")
     // end::actuator[]
+    compile("com.google.protobuf:protobuf-java:2.5.0")
     testCompile("junit:junit")
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.11'
+    gradleVersion = '1.10'
 }
-
