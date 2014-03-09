@@ -2,9 +2,11 @@ buildscript {
     repositories {
         maven { url "http://repo.spring.io/libs-snapshot" }
         mavenLocal()
+        mavenCentral()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.0.0.RC3")
+        classpath ("com.andrewkroh.gradle:gradle-protobuf-plugin:0.2.0")
     }
 }
 
@@ -12,9 +14,14 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
+// Uncomment this to generate proto sources.
+// Then run scripts/copy_proto_sources and comment this back out again.
+// TODO: Make this a stand-alone task and automate it.
+// apply plugin: 'protobuf'
+
 
 jar {
-    baseName = 'gs-spring-boot'
+    baseName = 'BitcoinServer'
     version =  '0.1.0'
 }
 
@@ -34,6 +41,9 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-actuator")
     // end::actuator[]
     compile("com.google.protobuf:protobuf-java:2.5.0")
+    // TODO: Use this instead, once bitcoinj-parent gets added to the maven repo.
+    // compile("com.google:bitcoinj:0.11.1")
+    compile files("libs/bitcoinj-0.11-bundled.jar")
     testCompile("junit:junit")
 }
 
