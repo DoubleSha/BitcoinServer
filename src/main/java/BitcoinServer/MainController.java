@@ -9,6 +9,7 @@ import com.google.bitcoin.params.MainNetParams;
 import com.google.bitcoin.params.TestNet3Params;
 import com.google.protobuf.ByteString;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,15 +27,18 @@ public class MainController {
     @Autowired
     PeerGroup testNetPeerGroup;
 
-    @RequestMapping(value = "/broadcast", method = RequestMethod.POST)
-    public ByteString broadcast(HttpServletRequest request) {
+    @RequestMapping(value = "/broadcast",
+                    method = RequestMethod.POST,
+                    consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE,
+                    produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public byte[] broadcast(HttpServletRequest request) {
         Protos.BroadcastResponse.Builder response = Protos.BroadcastResponse.newBuilder();
         Protos.TransactionList txList;
         try {
             txList = Protos.TransactionList.newBuilder().mergeFrom(request.getInputStream()).build();
         } catch (IOException e) {
             response.setError("Failed to read transaction list: " + e);
-            return response.build().toByteString();
+            return response.build().toByteArray();
         }
         NetworkParameters params = null;
         PeerGroup peerGroup = null;
@@ -48,7 +52,7 @@ public class MainController {
         }
         if (params == null || peerGroup == null) {
             response.setError("Invalid network");
-            return response.build().toByteString();
+            return response.build().toByteArray();
         }
         ArrayList<Transaction> txs = new ArrayList<Transaction>();
         // Decode and validate all transactions.
@@ -60,12 +64,12 @@ public class MainController {
                 txs.add(tx);
             } catch (VerificationException e) {
                 response.setError("Invalid transaction: " + e);
-                return response.build().toByteString();
+                return response.build().toByteArray();
             }
         }
         if (txs.isEmpty()) {
             response.setError("No transactions");
-            return response.build().toByteString();
+            return response.build().toByteArray();
         }
         // Transactions are valid, now broadcast them.
         try {
@@ -76,6 +80,6 @@ public class MainController {
         } catch (ExecutionException e) {
             response.setError("Failed to send transactions: " + e);
         }
-        return response.build().toByteString();
+        return response.build().toByteArray();
     }
 }
