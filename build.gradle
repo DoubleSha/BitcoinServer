@@ -34,9 +34,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-actuator")
     // end::actuator[]
     compile("com.google.protobuf:protobuf-java:2.5.0")
-    // TODO: Use this instead, once bitcoinj-parent gets added to the maven repo.
-    // compile("com.google:bitcoinj:0.11.1")
-    compile files("libs/bitcoinj-0.11-bundled.jar")
+    compile("com.google:bitcoinj:0.11.1")
     testCompile("junit:junit")
 }
 
