@@ -7,6 +7,8 @@ import com.google.bitcoin.params.TestNet3Params;
 import com.google.bitcoin.script.ScriptBuilder;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,8 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 public class MainController {
+    private final Logger log = LoggerFactory.getLogger(MainController.class);
+
     @Autowired
     PeerGroup mainNetPeerGroup;
 
@@ -28,15 +32,8 @@ public class MainController {
                     method = RequestMethod.POST,
                     consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE,
                     produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public byte[] broadcast(HttpServletRequest request) {
+    public @ResponseBody Protos.BroadcastPaymentResponse broadcast(@RequestBody Protos.BroadcastPayment broadcastPayment) {
         Protos.BroadcastPaymentResponse.Builder response = Protos.BroadcastPaymentResponse.newBuilder();
-        Protos.BroadcastPayment broadcastPayment;
-        try {
-            broadcastPayment = Protos.BroadcastPayment.newBuilder().mergeFrom(request.getInputStream()).build();
-        } catch (IOException e) {
-            response.setError("Failed to read BroadcastPayment " + e);
-            return response.build().toByteArray();
-        }
         org.bitcoin.protocols.payments.Protos.PaymentRequest paymentRequest = broadcastPayment.getPaymentRequest();
         org.bitcoin.protocols.payments.Protos.Payment payment = broadcastPayment.getPayment();
         org.bitcoin.protocols.payments.Protos.PaymentDetails paymentDetails = null;
@@ -46,11 +43,11 @@ public class MainController {
             paymentDetails = org.bitcoin.protocols.payments.Protos.PaymentDetails.newBuilder().mergeFrom(paymentRequest.getSerializedPaymentDetails()).build();
         } catch (InvalidProtocolBufferException e) {
             response.setError("Invalid PaymentDetails " + e);
-            return response.build().toByteArray();
+            return response.build();
         }
         if (paymentDetails == null) {
             response.setError("Invalid PaymentDetails");
-            return response.build().toByteArray();
+            return response.build();
         }
         if (!paymentDetails.hasNetwork() || paymentDetails.getNetwork().equals("main")) {
             peerGroup = mainNetPeerGroup;
@@ -62,7 +59,7 @@ public class MainController {
         }
         if (params == null || peerGroup == null) {
             response.setError("Invalid network");
-            return response.build().toByteArray();
+            return response.build();
         }
         // Decode and validate all transactions.
         ArrayList<Transaction> txs = new ArrayList<Transaction>();
@@ -77,12 +74,12 @@ public class MainController {
                     txSum += output.getValue().doubleValue();
             } catch (VerificationException e) {
                 response.setError("Invalid transaction " + e);
-                return response.build().toByteArray();
+                return response.build();
             }
         }
         if (txs.isEmpty() || txSum == 0) {
             response.setError("Empty transactions");
-            return response.build().toByteArray();
+            return response.build();
         }
         // Verify that the value of the Payment is what we expect.
         double outSum = 0;
@@ -90,7 +87,7 @@ public class MainController {
             outSum += out.getAmount();
         if (txSum != outSum) {
             response.setError("Transaction value: " + txSum + " does not match expected PaymentRequest value: " + outSum);
-            return response.build().toByteArray();
+            return response.build();
         }
         // Transactions are valid, now broadcast them.
         try {
@@ -101,20 +98,21 @@ public class MainController {
         } catch (ExecutionException e) {
             response.setError("Failed to send transactions " + e);
         }
-        return response.build().toByteArray();
+        return response.build();
     }
 
     @RequestMapping(value = "/send",
-            method = RequestMethod.POST,
-            consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE,
-            produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public byte[] send(HttpServletRequest request) throws IOException {
+                    method = RequestMethod.POST,
+                    consumes = "application/bitcoin-payment",
+                    produces = "application/bitcoin-paymentack")
+    public @ResponseBody org.bitcoin.protocols.payments.Protos.PaymentACK
+            send(@RequestBody org.bitcoin.protocols.payments.Protos.Payment payment) throws IOException {
+        log.debug("/send {}", payment);
         org.bitcoin.protocols.payments.Protos.PaymentACK.Builder ack = org.bitcoin.protocols.payments.Protos.PaymentACK.newBuilder();
-        org.bitcoin.protocols.payments.Protos.Payment payment;
-        payment = org.bitcoin.protocols.payments.Protos.Payment.newBuilder().mergeFrom(request.getInputStream()).build();
         ack.setPayment(payment);
         NetworkParameters params = TestNet3Params.get();
-        PeerGroup peerGroup = testNetPeerGroup;
+        PeerGroup peerGroup = new PeerGroup(params);
+        peerGroup.startAndWait();
         // Decode and validate all transactions.
         ArrayList<Transaction> txs = new ArrayList<Transaction>();
         for (ByteString encodedTx : payment.getTransactionsList()) {
@@ -125,12 +123,12 @@ public class MainController {
                 txs.add(tx);
             } catch (VerificationException e) {
                 ack.setMemo("Error: Invalid transaction " + e);
-                return ack.build().toByteArray();
+                return ack.build();
             }
         }
         if (txs.isEmpty()) {
             ack.setMemo("Error: Empty transactions");
-            return ack.build().toByteArray();
+            return ack.build();
         }
         // Transactions are valid, now broadcast them.
         try {
@@ -141,15 +139,16 @@ public class MainController {
         } catch (ExecutionException e) {
             ack.setMemo("Failed to send transactions: " + e);
         }
-        return ack.build().toByteArray();
+        return ack.build();
     }
 
-    @RequestMapping(value = "/pay", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public byte[] pay(@RequestParam(value = "to") String to,
-                      @RequestParam(value = "amount") String btc,
-                      @RequestParam(value = "network", required = false) String network,
-                      @RequestParam(value = "memo", required = false) String memo)
-            throws AddressFormatException, VerificationException {
+    @RequestMapping(value = "/pay", produces = "application/bitcoin-paymentrequest")
+    public @ResponseBody org.bitcoin.protocols.payments.Protos.PaymentRequest
+            pay(@RequestParam(value = "to", required = true) String to,
+                @RequestParam(value = "amount", required = true) String btc,
+                @RequestParam(value = "network", required = false) String network,
+                @RequestParam(value = "memo", required = false) String memo)
+                    throws AddressFormatException, VerificationException {
         NetworkParameters params = null;
         if (network == null || network.equals("main"))
             params = MainNetParams.get();
@@ -163,7 +162,7 @@ public class MainController {
         org.bitcoin.protocols.payments.Protos.PaymentDetails paymentDetails = org.bitcoin.protocols.payments.Protos.PaymentDetails.newBuilder()
                 .setNetwork(network)
                 .setTime(System.currentTimeMillis() / 1000L)
-                .setPaymentUrl("173.8.166.105:8080/send")
+//                .setPaymentUrl("http://173.8.166.105:8080/send")
                 .addOutputs(outputBuilder)
                 .setMemo(memo)
                 .build();
@@ -171,6 +170,6 @@ public class MainController {
                 .setPaymentDetailsVersion(1)
                 .setPkiType("none")
                 .setSerializedPaymentDetails(paymentDetails.toByteString())
-                .build().toByteArray();
+                .build();
     }
 }

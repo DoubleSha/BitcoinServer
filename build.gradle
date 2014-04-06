@@ -4,7 +4,7 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.0.0.RC3")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.0.0.RC5")
     }
 }
 
@@ -24,18 +24,16 @@ repositories {
 }
 
 dependencies {
-    // tag::jetty[]
-    compile("org.springframework.boot:spring-boot-starter-web") {
-        exclude module: "spring-boot-starter-tomcat"
-    }
-    compile("org.springframework.boot:spring-boot-starter-jetty")
-    // end::jetty[]
-    // tag::actuator[]
+    compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-actuator")
-    // end::actuator[]
     compile("com.google.protobuf:protobuf-java:2.5.0")
     compile("com.google:bitcoinj:0.11.1")
     testCompile("junit:junit")
+}
+
+// Copy resources into the jar as static content, where Spring expects it.
+jar.into('static') {
+    from('src/main/webapp')
 }
 
 task wrapper(type: Wrapper) {
