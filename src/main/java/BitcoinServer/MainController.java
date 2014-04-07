@@ -2,6 +2,7 @@ package BitcoinServer;
 
 import com.BitcoinServer.Protos;
 import com.google.bitcoin.core.*;
+import com.google.bitcoin.net.discovery.DnsDiscovery;
 import com.google.bitcoin.params.MainNetParams;
 import com.google.bitcoin.params.TestNet3Params;
 import com.google.bitcoin.script.ScriptBuilder;
@@ -9,23 +10,17 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 @RestController
 public class MainController {
     private final Logger log = LoggerFactory.getLogger(MainController.class);
-
-//    @Autowired
-//    PeerGroup mainNetPeerGroup;
-//
-//    @Autowired
-//    PeerGroup testNetPeerGroup;
 
     @RequestMapping(value = "/broadcast",
                     method = RequestMethod.POST,
@@ -42,10 +37,12 @@ public class MainController {
             paymentDetails = org.bitcoin.protocols.payments.Protos.PaymentDetails.newBuilder().mergeFrom(paymentRequest.getSerializedPaymentDetails()).build();
         } catch (InvalidProtocolBufferException e) {
             response.setError("Invalid PaymentDetails " + e);
+            log.info("Broadcast failed with error: {} payment: {}", response.getError(), broadcastPayment);
             return response.build();
         }
         if (paymentDetails == null) {
             response.setError("Invalid PaymentDetails");
+            log.info("Broadcast failed with error: {} payment: {}", response.getError(), broadcastPayment);
             return response.build();
         }
         if (!paymentDetails.hasNetwork() || paymentDetails.getNetwork().equals("main"))
@@ -54,9 +51,9 @@ public class MainController {
             params = TestNet3Params.get();
         if (params == null) {
             response.setError("Invalid network");
+            log.info("Broadcast failed with error: {} payment: {}", response.getError(), broadcastPayment);
             return response.build();
         }
-        peerGroup = new PeerGroup(params);
         // Decode and validate all transactions.
         ArrayList<Transaction> txs = new ArrayList<Transaction>();
         double txSum = 0;
@@ -66,15 +63,27 @@ public class MainController {
                 tx = new Transaction(params, encodedTx.toByteArray());
                 tx.verify();
                 txs.add(tx);
-                for (TransactionOutput output : tx.getOutputs())
-                    txSum += output.getValue().doubleValue();
+                for (TransactionOutput txOut : tx.getOutputs()) {
+                    for (org.bitcoin.protocols.payments.Protos.Output reqOut : paymentDetails.getOutputsList()) {
+                        if (Arrays.equals(txOut.getScriptBytes(), reqOut.getScript().toByteArray())) {
+                            txSum += txOut.getValue().doubleValue();
+                        }
+                    }
+                }
             } catch (VerificationException e) {
                 response.setError("Invalid transaction " + e);
+                log.info("Broadcast failed with error: {} payment: {}", response.getError(), broadcastPayment);
                 return response.build();
             }
         }
-        if (txs.isEmpty() || txSum == 0) {
+        if (txs.isEmpty()) {
             response.setError("Empty transactions");
+            log.info("Broadcast failed with error: {} payment: {}", response.getError(), broadcastPayment);
+            return response.build();
+        }
+        if (txSum == 0) {
+            response.setError("No transactions matching outputs in PaymentRequest");
+            log.info("Broadcast failed with error: {} payment: {}", response.getError(), broadcastPayment);
             return response.build();
         }
         // Verify that the value of the Payment is what we expect.
@@ -83,10 +92,14 @@ public class MainController {
             outSum += out.getAmount();
         if (txSum != outSum) {
             response.setError("Transaction value: " + txSum + " does not match expected PaymentRequest value: " + outSum);
+            log.info("Broadcast failed with error: {} payment: {}", response.getError(), broadcastPayment);
             return response.build();
         }
         // Transactions are valid, now broadcast them.
         try {
+            peerGroup = new PeerGroup(params);
+            peerGroup.addPeerDiscovery(new DnsDiscovery(params));
+            peerGroup.startAndWait();
             for (Transaction tx : txs)
                 peerGroup.broadcastTransaction(tx).get();
         } catch (InterruptedException e) {
@@ -94,6 +107,11 @@ public class MainController {
         } catch (ExecutionException e) {
             response.setError("Failed to send transactions " + e);
         }
+        peerGroup.stopAndWait();
+        if (response.hasError())
+            log.info("Broadcast failed with error: {} payment: {}", response.getError(), broadcastPayment);
+        else
+            log.info("Broadcast succeeded payment: {}", broadcastPayment);
         return response.build();
     }
 
@@ -105,10 +123,9 @@ public class MainController {
             send(@RequestBody org.bitcoin.protocols.payments.Protos.Payment payment) throws IOException {
         log.debug("/send {}", payment);
         org.bitcoin.protocols.payments.Protos.PaymentACK.Builder ack = org.bitcoin.protocols.payments.Protos.PaymentACK.newBuilder();
+        ack.setMemo("Thank you for your payment! It is being processed by the bitcoin network.");
         ack.setPayment(payment);
         NetworkParameters params = TestNet3Params.get();
-        PeerGroup peerGroup = new PeerGroup(params);
-        peerGroup.startAndWait();
         // Decode and validate all transactions.
         ArrayList<Transaction> txs = new ArrayList<Transaction>();
         for (ByteString encodedTx : payment.getTransactionsList()) {
@@ -127,7 +144,10 @@ public class MainController {
             return ack.build();
         }
         // Transactions are valid, now broadcast them.
+        PeerGroup peerGroup = new PeerGroup(params);
         try {
+            peerGroup.addPeerDiscovery(new DnsDiscovery(params));
+            peerGroup.startAndWait();
             for (Transaction tx : txs)
                 peerGroup.broadcastTransaction(tx).get();
         } catch (InterruptedException e) {
@@ -135,6 +155,7 @@ public class MainController {
         } catch (ExecutionException e) {
             ack.setMemo("Failed to send transactions: " + e);
         }
+        peerGroup.stopAndWait();
         return ack.build();
     }
 
@@ -158,7 +179,7 @@ public class MainController {
         org.bitcoin.protocols.payments.Protos.PaymentDetails paymentDetails = org.bitcoin.protocols.payments.Protos.PaymentDetails.newBuilder()
                 .setNetwork(network)
                 .setTime(System.currentTimeMillis() / 1000L)
-//                .setPaymentUrl("http://173.8.166.105:8080/send")
+                .setPaymentUrl("http://173.8.166.105:8080/send")
                 .addOutputs(outputBuilder)
                 .setMemo(memo)
                 .build();
