@@ -11,17 +11,17 @@ public final class Protos {
   public interface BroadcastPaymentOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // optional .payments.PaymentRequest paymentRequest = 1;
+    // optional .payments.PaymentRequest payment_request = 1;
     /**
-     * <code>optional .payments.PaymentRequest paymentRequest = 1;</code>
+     * <code>optional .payments.PaymentRequest payment_request = 1;</code>
      */
     boolean hasPaymentRequest();
     /**
-     * <code>optional .payments.PaymentRequest paymentRequest = 1;</code>
+     * <code>optional .payments.PaymentRequest payment_request = 1;</code>
      */
     org.bitcoin.protocols.payments.Protos.PaymentRequest getPaymentRequest();
     /**
-     * <code>optional .payments.PaymentRequest paymentRequest = 1;</code>
+     * <code>optional .payments.PaymentRequest payment_request = 1;</code>
      */
     org.bitcoin.protocols.payments.Protos.PaymentRequestOrBuilder getPaymentRequestOrBuilder();
 
@@ -156,23 +156,23 @@ public final class Protos {
     }
 
     private int bitField0_;
-    // optional .payments.PaymentRequest paymentRequest = 1;
-    public static final int PAYMENTREQUEST_FIELD_NUMBER = 1;
+    // optional .payments.PaymentRequest payment_request = 1;
+    public static final int PAYMENT_REQUEST_FIELD_NUMBER = 1;
     private org.bitcoin.protocols.payments.Protos.PaymentRequest paymentRequest_;
     /**
-     * <code>optional .payments.PaymentRequest paymentRequest = 1;</code>
+     * <code>optional .payments.PaymentRequest payment_request = 1;</code>
      */
     public boolean hasPaymentRequest() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>optional .payments.PaymentRequest paymentRequest = 1;</code>
+     * <code>optional .payments.PaymentRequest payment_request = 1;</code>
      */
     public org.bitcoin.protocols.payments.Protos.PaymentRequest getPaymentRequest() {
       return paymentRequest_;
     }
     /**
-     * <code>optional .payments.PaymentRequest paymentRequest = 1;</code>
+     * <code>optional .payments.PaymentRequest payment_request = 1;</code>
      */
     public org.bitcoin.protocols.payments.Protos.PaymentRequestOrBuilder getPaymentRequestOrBuilder() {
       return paymentRequest_;
@@ -486,18 +486,18 @@ public final class Protos {
       }
       private int bitField0_;
 
-      // optional .payments.PaymentRequest paymentRequest = 1;
+      // optional .payments.PaymentRequest payment_request = 1;
       private org.bitcoin.protocols.payments.Protos.PaymentRequest paymentRequest_ = org.bitcoin.protocols.payments.Protos.PaymentRequest.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           org.bitcoin.protocols.payments.Protos.PaymentRequest, org.bitcoin.protocols.payments.Protos.PaymentRequest.Builder, org.bitcoin.protocols.payments.Protos.PaymentRequestOrBuilder> paymentRequestBuilder_;
       /**
-       * <code>optional .payments.PaymentRequest paymentRequest = 1;</code>
+       * <code>optional .payments.PaymentRequest payment_request = 1;</code>
        */
       public boolean hasPaymentRequest() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>optional .payments.PaymentRequest paymentRequest = 1;</code>
+       * <code>optional .payments.PaymentRequest payment_request = 1;</code>
        */
       public org.bitcoin.protocols.payments.Protos.PaymentRequest getPaymentRequest() {
         if (paymentRequestBuilder_ == null) {
@@ -507,7 +507,7 @@ public final class Protos {
         }
       }
       /**
-       * <code>optional .payments.PaymentRequest paymentRequest = 1;</code>
+       * <code>optional .payments.PaymentRequest payment_request = 1;</code>
        */
       public Builder setPaymentRequest(org.bitcoin.protocols.payments.Protos.PaymentRequest value) {
         if (paymentRequestBuilder_ == null) {
@@ -523,7 +523,7 @@ public final class Protos {
         return this;
       }
       /**
-       * <code>optional .payments.PaymentRequest paymentRequest = 1;</code>
+       * <code>optional .payments.PaymentRequest payment_request = 1;</code>
        */
       public Builder setPaymentRequest(
           org.bitcoin.protocols.payments.Protos.PaymentRequest.Builder builderForValue) {
@@ -537,7 +537,7 @@ public final class Protos {
         return this;
       }
       /**
-       * <code>optional .payments.PaymentRequest paymentRequest = 1;</code>
+       * <code>optional .payments.PaymentRequest payment_request = 1;</code>
        */
       public Builder mergePaymentRequest(org.bitcoin.protocols.payments.Protos.PaymentRequest value) {
         if (paymentRequestBuilder_ == null) {
@@ -556,7 +556,7 @@ public final class Protos {
         return this;
       }
       /**
-       * <code>optional .payments.PaymentRequest paymentRequest = 1;</code>
+       * <code>optional .payments.PaymentRequest payment_request = 1;</code>
        */
       public Builder clearPaymentRequest() {
         if (paymentRequestBuilder_ == null) {
@@ -569,7 +569,7 @@ public final class Protos {
         return this;
       }
       /**
-       * <code>optional .payments.PaymentRequest paymentRequest = 1;</code>
+       * <code>optional .payments.PaymentRequest payment_request = 1;</code>
        */
       public org.bitcoin.protocols.payments.Protos.PaymentRequest.Builder getPaymentRequestBuilder() {
         bitField0_ |= 0x00000001;
@@ -577,7 +577,7 @@ public final class Protos {
         return getPaymentRequestFieldBuilder().getBuilder();
       }
       /**
-       * <code>optional .payments.PaymentRequest paymentRequest = 1;</code>
+       * <code>optional .payments.PaymentRequest payment_request = 1;</code>
        */
       public org.bitcoin.protocols.payments.Protos.PaymentRequestOrBuilder getPaymentRequestOrBuilder() {
         if (paymentRequestBuilder_ != null) {
@@ -587,7 +587,7 @@ public final class Protos {
         }
       }
       /**
-       * <code>optional .payments.PaymentRequest paymentRequest = 1;</code>
+       * <code>optional .payments.PaymentRequest payment_request = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
           org.bitcoin.protocols.payments.Protos.PaymentRequest, org.bitcoin.protocols.payments.Protos.PaymentRequest.Builder, org.bitcoin.protocols.payments.Protos.PaymentRequestOrBuilder> 
@@ -734,31 +734,17 @@ public final class Protos {
   public interface BroadcastPaymentResponseOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // required .BitcoinServer.BroadcastPayment broadcast = 1;
+    // optional string error = 1;
     /**
-     * <code>required .BitcoinServer.BroadcastPayment broadcast = 1;</code>
-     */
-    boolean hasBroadcast();
-    /**
-     * <code>required .BitcoinServer.BroadcastPayment broadcast = 1;</code>
-     */
-    com.BitcoinServer.Protos.BroadcastPayment getBroadcast();
-    /**
-     * <code>required .BitcoinServer.BroadcastPayment broadcast = 1;</code>
-     */
-    com.BitcoinServer.Protos.BroadcastPaymentOrBuilder getBroadcastOrBuilder();
-
-    // optional string error = 2;
-    /**
-     * <code>optional string error = 2;</code>
+     * <code>optional string error = 1;</code>
      */
     boolean hasError();
     /**
-     * <code>optional string error = 2;</code>
+     * <code>optional string error = 1;</code>
      */
     java.lang.String getError();
     /**
-     * <code>optional string error = 2;</code>
+     * <code>optional string error = 1;</code>
      */
     com.google.protobuf.ByteString
         getErrorBytes();
@@ -815,20 +801,7 @@ public final class Protos {
               break;
             }
             case 10: {
-              com.BitcoinServer.Protos.BroadcastPayment.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000001) == 0x00000001)) {
-                subBuilder = broadcast_.toBuilder();
-              }
-              broadcast_ = input.readMessage(com.BitcoinServer.Protos.BroadcastPayment.PARSER, extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(broadcast_);
-                broadcast_ = subBuilder.buildPartial();
-              }
               bitField0_ |= 0x00000001;
-              break;
-            }
-            case 18: {
-              bitField0_ |= 0x00000002;
               error_ = input.readBytes();
               break;
             }
@@ -872,39 +845,17 @@ public final class Protos {
     }
 
     private int bitField0_;
-    // required .BitcoinServer.BroadcastPayment broadcast = 1;
-    public static final int BROADCAST_FIELD_NUMBER = 1;
-    private com.BitcoinServer.Protos.BroadcastPayment broadcast_;
+    // optional string error = 1;
+    public static final int ERROR_FIELD_NUMBER = 1;
+    private java.lang.Object error_;
     /**
-     * <code>required .BitcoinServer.BroadcastPayment broadcast = 1;</code>
+     * <code>optional string error = 1;</code>
      */
-    public boolean hasBroadcast() {
+    public boolean hasError() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required .BitcoinServer.BroadcastPayment broadcast = 1;</code>
-     */
-    public com.BitcoinServer.Protos.BroadcastPayment getBroadcast() {
-      return broadcast_;
-    }
-    /**
-     * <code>required .BitcoinServer.BroadcastPayment broadcast = 1;</code>
-     */
-    public com.BitcoinServer.Protos.BroadcastPaymentOrBuilder getBroadcastOrBuilder() {
-      return broadcast_;
-    }
-
-    // optional string error = 2;
-    public static final int ERROR_FIELD_NUMBER = 2;
-    private java.lang.Object error_;
-    /**
-     * <code>optional string error = 2;</code>
-     */
-    public boolean hasError() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>optional string error = 2;</code>
+     * <code>optional string error = 1;</code>
      */
     public java.lang.String getError() {
       java.lang.Object ref = error_;
@@ -921,7 +872,7 @@ public final class Protos {
       }
     }
     /**
-     * <code>optional string error = 2;</code>
+     * <code>optional string error = 1;</code>
      */
     public com.google.protobuf.ByteString
         getErrorBytes() {
@@ -938,7 +889,6 @@ public final class Protos {
     }
 
     private void initFields() {
-      broadcast_ = com.BitcoinServer.Protos.BroadcastPayment.getDefaultInstance();
       error_ = "";
     }
     private byte memoizedIsInitialized = -1;
@@ -946,14 +896,6 @@ public final class Protos {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (!hasBroadcast()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!getBroadcast().isInitialized()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -962,10 +904,7 @@ public final class Protos {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, broadcast_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(2, getErrorBytes());
+        output.writeBytes(1, getErrorBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -978,11 +917,7 @@ public final class Protos {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, broadcast_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, getErrorBytes());
+          .computeBytesSize(1, getErrorBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1092,7 +1027,6 @@ public final class Protos {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getBroadcastFieldBuilder();
         }
       }
       private static Builder create() {
@@ -1101,14 +1035,8 @@ public final class Protos {
 
       public Builder clear() {
         super.clear();
-        if (broadcastBuilder_ == null) {
-          broadcast_ = com.BitcoinServer.Protos.BroadcastPayment.getDefaultInstance();
-        } else {
-          broadcastBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000001);
         error_ = "";
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
 
@@ -1140,14 +1068,6 @@ public final class Protos {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        if (broadcastBuilder_ == null) {
-          result.broadcast_ = broadcast_;
-        } else {
-          result.broadcast_ = broadcastBuilder_.build();
-        }
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
         result.error_ = error_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -1165,11 +1085,8 @@ public final class Protos {
 
       public Builder mergeFrom(com.BitcoinServer.Protos.BroadcastPaymentResponse other) {
         if (other == com.BitcoinServer.Protos.BroadcastPaymentResponse.getDefaultInstance()) return this;
-        if (other.hasBroadcast()) {
-          mergeBroadcast(other.getBroadcast());
-        }
         if (other.hasError()) {
-          bitField0_ |= 0x00000002;
+          bitField0_ |= 0x00000001;
           error_ = other.error_;
           onChanged();
         }
@@ -1178,14 +1095,6 @@ public final class Protos {
       }
 
       public final boolean isInitialized() {
-        if (!hasBroadcast()) {
-          
-          return false;
-        }
-        if (!getBroadcast().isInitialized()) {
-          
-          return false;
-        }
         return true;
       }
 
@@ -1208,133 +1117,16 @@ public final class Protos {
       }
       private int bitField0_;
 
-      // required .BitcoinServer.BroadcastPayment broadcast = 1;
-      private com.BitcoinServer.Protos.BroadcastPayment broadcast_ = com.BitcoinServer.Protos.BroadcastPayment.getDefaultInstance();
-      private com.google.protobuf.SingleFieldBuilder<
-          com.BitcoinServer.Protos.BroadcastPayment, com.BitcoinServer.Protos.BroadcastPayment.Builder, com.BitcoinServer.Protos.BroadcastPaymentOrBuilder> broadcastBuilder_;
+      // optional string error = 1;
+      private java.lang.Object error_ = "";
       /**
-       * <code>required .BitcoinServer.BroadcastPayment broadcast = 1;</code>
+       * <code>optional string error = 1;</code>
        */
-      public boolean hasBroadcast() {
+      public boolean hasError() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required .BitcoinServer.BroadcastPayment broadcast = 1;</code>
-       */
-      public com.BitcoinServer.Protos.BroadcastPayment getBroadcast() {
-        if (broadcastBuilder_ == null) {
-          return broadcast_;
-        } else {
-          return broadcastBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>required .BitcoinServer.BroadcastPayment broadcast = 1;</code>
-       */
-      public Builder setBroadcast(com.BitcoinServer.Protos.BroadcastPayment value) {
-        if (broadcastBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          broadcast_ = value;
-          onChanged();
-        } else {
-          broadcastBuilder_.setMessage(value);
-        }
-        bitField0_ |= 0x00000001;
-        return this;
-      }
-      /**
-       * <code>required .BitcoinServer.BroadcastPayment broadcast = 1;</code>
-       */
-      public Builder setBroadcast(
-          com.BitcoinServer.Protos.BroadcastPayment.Builder builderForValue) {
-        if (broadcastBuilder_ == null) {
-          broadcast_ = builderForValue.build();
-          onChanged();
-        } else {
-          broadcastBuilder_.setMessage(builderForValue.build());
-        }
-        bitField0_ |= 0x00000001;
-        return this;
-      }
-      /**
-       * <code>required .BitcoinServer.BroadcastPayment broadcast = 1;</code>
-       */
-      public Builder mergeBroadcast(com.BitcoinServer.Protos.BroadcastPayment value) {
-        if (broadcastBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              broadcast_ != com.BitcoinServer.Protos.BroadcastPayment.getDefaultInstance()) {
-            broadcast_ =
-              com.BitcoinServer.Protos.BroadcastPayment.newBuilder(broadcast_).mergeFrom(value).buildPartial();
-          } else {
-            broadcast_ = value;
-          }
-          onChanged();
-        } else {
-          broadcastBuilder_.mergeFrom(value);
-        }
-        bitField0_ |= 0x00000001;
-        return this;
-      }
-      /**
-       * <code>required .BitcoinServer.BroadcastPayment broadcast = 1;</code>
-       */
-      public Builder clearBroadcast() {
-        if (broadcastBuilder_ == null) {
-          broadcast_ = com.BitcoinServer.Protos.BroadcastPayment.getDefaultInstance();
-          onChanged();
-        } else {
-          broadcastBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000001);
-        return this;
-      }
-      /**
-       * <code>required .BitcoinServer.BroadcastPayment broadcast = 1;</code>
-       */
-      public com.BitcoinServer.Protos.BroadcastPayment.Builder getBroadcastBuilder() {
-        bitField0_ |= 0x00000001;
-        onChanged();
-        return getBroadcastFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>required .BitcoinServer.BroadcastPayment broadcast = 1;</code>
-       */
-      public com.BitcoinServer.Protos.BroadcastPaymentOrBuilder getBroadcastOrBuilder() {
-        if (broadcastBuilder_ != null) {
-          return broadcastBuilder_.getMessageOrBuilder();
-        } else {
-          return broadcast_;
-        }
-      }
-      /**
-       * <code>required .BitcoinServer.BroadcastPayment broadcast = 1;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          com.BitcoinServer.Protos.BroadcastPayment, com.BitcoinServer.Protos.BroadcastPayment.Builder, com.BitcoinServer.Protos.BroadcastPaymentOrBuilder> 
-          getBroadcastFieldBuilder() {
-        if (broadcastBuilder_ == null) {
-          broadcastBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              com.BitcoinServer.Protos.BroadcastPayment, com.BitcoinServer.Protos.BroadcastPayment.Builder, com.BitcoinServer.Protos.BroadcastPaymentOrBuilder>(
-                  broadcast_,
-                  getParentForChildren(),
-                  isClean());
-          broadcast_ = null;
-        }
-        return broadcastBuilder_;
-      }
-
-      // optional string error = 2;
-      private java.lang.Object error_ = "";
-      /**
-       * <code>optional string error = 2;</code>
-       */
-      public boolean hasError() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>optional string error = 2;</code>
+       * <code>optional string error = 1;</code>
        */
       public java.lang.String getError() {
         java.lang.Object ref = error_;
@@ -1348,7 +1140,7 @@ public final class Protos {
         }
       }
       /**
-       * <code>optional string error = 2;</code>
+       * <code>optional string error = 1;</code>
        */
       public com.google.protobuf.ByteString
           getErrorBytes() {
@@ -1364,36 +1156,36 @@ public final class Protos {
         }
       }
       /**
-       * <code>optional string error = 2;</code>
+       * <code>optional string error = 1;</code>
        */
       public Builder setError(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000002;
+  bitField0_ |= 0x00000001;
         error_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string error = 2;</code>
+       * <code>optional string error = 1;</code>
        */
       public Builder clearError() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000001);
         error_ = getDefaultInstance().getError();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string error = 2;</code>
+       * <code>optional string error = 1;</code>
        */
       public Builder setErrorBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000002;
+  bitField0_ |= 0x00000001;
         error_ = value;
         onChanged();
         return this;
@@ -1430,13 +1222,11 @@ public final class Protos {
   static {
     java.lang.String[] descriptorData = {
       "\n\023bitcoinserver.proto\022\rBitcoinServer\032\024pa" +
-      "ymentrequest.proto\"h\n\020BroadcastPayment\0220" +
-      "\n\016paymentRequest\030\001 \001(\0132\030.payments.Paymen" +
-      "tRequest\022\"\n\007payment\030\002 \001(\0132\021.payments.Pay" +
-      "ment\"]\n\030BroadcastPaymentResponse\0222\n\tbroa" +
-      "dcast\030\001 \002(\0132\037.BitcoinServer.BroadcastPay" +
-      "ment\022\r\n\005error\030\002 \001(\tB\033\n\021com.BitcoinServer" +
-      "B\006Protos"
+      "ymentrequest.proto\"i\n\020BroadcastPayment\0221" +
+      "\n\017payment_request\030\001 \001(\0132\030.payments.Payme" +
+      "ntRequest\022\"\n\007payment\030\002 \001(\0132\021.payments.Pa" +
+      "yment\")\n\030BroadcastPaymentResponse\022\r\n\005err" +
+      "or\030\001 \001(\tB\033\n\021com.BitcoinServerB\006Protos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -1454,7 +1244,7 @@ public final class Protos {
           internal_static_BitcoinServer_BroadcastPaymentResponse_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_BitcoinServer_BroadcastPaymentResponse_descriptor,
-              new java.lang.String[] { "Broadcast", "Error", });
+              new java.lang.String[] { "Error", });
           return null;
         }
       };
