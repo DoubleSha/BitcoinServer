@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -22,11 +21,11 @@ import java.util.concurrent.ExecutionException;
 public class MainController {
     private final Logger log = LoggerFactory.getLogger(MainController.class);
 
-    @Autowired
-    PeerGroup mainNetPeerGroup;
-
-    @Autowired
-    PeerGroup testNetPeerGroup;
+//    @Autowired
+//    PeerGroup mainNetPeerGroup;
+//
+//    @Autowired
+//    PeerGroup testNetPeerGroup;
 
     @RequestMapping(value = "/broadcast",
                     method = RequestMethod.POST,
@@ -49,18 +48,15 @@ public class MainController {
             response.setError("Invalid PaymentDetails");
             return response.build();
         }
-        if (!paymentDetails.hasNetwork() || paymentDetails.getNetwork().equals("main")) {
-            peerGroup = mainNetPeerGroup;
+        if (!paymentDetails.hasNetwork() || paymentDetails.getNetwork().equals("main"))
             params = MainNetParams.get();
-        }
-        else if (paymentDetails.getNetwork().equals("test")) {
-            peerGroup = testNetPeerGroup;
+        else if (paymentDetails.getNetwork().equals("test"))
             params = TestNet3Params.get();
-        }
-        if (params == null || peerGroup == null) {
+        if (params == null) {
             response.setError("Invalid network");
             return response.build();
         }
+        peerGroup = new PeerGroup(params);
         // Decode and validate all transactions.
         ArrayList<Transaction> txs = new ArrayList<Transaction>();
         double txSum = 0;
