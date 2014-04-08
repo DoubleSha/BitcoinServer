@@ -1,2 +1,2 @@
 #!/bin/sh
-nohup java -jar build/libs/BitcoinServer-0.1.0.jar  &
+nohup java -jar BitcoinServer-0.1.0.jar  &
