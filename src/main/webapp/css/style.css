@@ -1,0 +1,132 @@
+body {
+  background-color: #57585a;
+}
+#container {
+  width: 70%;
+  margin: 0 auto;
+}
+
+/*LOGO SHIT*/
+
+#container #logo {
+  width: 49%;
+  display: inline-block;
+  font-size: 70px;
+  margin: auto;
+}
+
+#container #logo .content {
+  position: absolute;
+  top:355px;
+  min-height: 300px;
+}
+
+#container #logo .content .bold {
+  font-weight: bold;
+}
+
+#container #logo .content .light {
+  font-weight: lighter;
+}
+
+#container #logo .content .white {
+  color:#f2f3f4;
+}
+
+#container #logo .content .green {
+  color:#3ab54a;
+}
+
+#container #logo .content .dot {
+  font-size: 150%;
+  margin: -15px;
+}
+
+#container #logo .content .loose {
+  letter-spacing: 10px;
+}
+
+/*FORM SHIT*/
+
+#container #form {
+  width: 49%;
+  display: inline-block;
+  padding:200 0px;
+}
+
+#container #form #form-header {
+  text-align: center;
+  width: 425px;
+  font-size: 30px;
+  color:#dcdcdc;
+}
+
+#container #form input{
+  padding: 20 10px;
+  width: 425px;
+  margin:10 0px;
+  font-size: 20px;
+}
+
+#container #form #submitButton {
+letter-spacing: 10px;
+  position: relative;
+  padding: 20 0px;
+  font-size: 22px;
+  color: white;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  background: #3ab54a;
+  border: 0;
+  border-radius: 2px;
+  width: 425px;
+  cursor: pointer;
+  -webkit-box-shadow: inset 0 -2px #28be68;
+  box-shadow: inset 0 -2px #28be68;
+  opacity: 0.9;
+}
+#container #form #submitButton:hover {
+  opacity: 1;
+}
+#container #form #submitButton:active {
+  top: 1px;
+  outline: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+/*RESPONSE SHIT*/
+#container #response {
+  width: 49%;
+  display: inline-block;
+  padding:200 0px;
+  opacity: 0;
+  color: #f2f3f4;
+}
+
+#container #response #goBack {
+letter-spacing: 10px;
+  position: relative;
+  padding: 20 0px;
+  font-size: 22px;
+  color: white;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  background: #3ab54a;
+  border: 0;
+  border-radius: 2px;
+  width: 425px;
+  cursor: pointer;
+  -webkit-box-shadow: inset 0 -2px #28be68;
+  box-shadow: inset 0 -2px #28be68;
+  opacity: 0.9;
+}
+#container #response #goBack:hover {
+  opacity: 1;
+}
+#container #response #goBack:active {
+  top: 1px;
+  outline: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}

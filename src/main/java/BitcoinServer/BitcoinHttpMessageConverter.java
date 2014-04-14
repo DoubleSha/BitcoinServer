@@ -2,7 +2,6 @@ package BitcoinServer;
 
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.Message;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
