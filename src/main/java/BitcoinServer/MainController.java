@@ -1,8 +1,6 @@
 package BitcoinServer;
 
 import com.BitcoinServer.Protos.*;
-import com.datastax.driver.core.ResultSet;
-import com.datastax.driver.core.Row;
 import com.google.bitcoin.core.*;
 import com.google.bitcoin.net.discovery.DnsDiscovery;
 import com.google.bitcoin.params.MainNetParams;
@@ -10,13 +8,11 @@ import com.google.bitcoin.params.TestNet3Params;
 import com.google.bitcoin.script.ScriptBuilder;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
-import org.apache.cassandra.utils.Hex;
 import org.apache.commons.codec.binary.Base64;
 import org.bitcoin.protocols.payments.Protos.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cassandra.core.CqlTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -36,7 +32,7 @@ public class MainController {
 //    private final String BASE_URL = "http://173.8.166.105:8080/";
 
     @Autowired
-    private CqlTemplate cqlTemplate;
+    private PaymentRequestDbService paymentRequestDbService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView index() {
@@ -49,6 +45,9 @@ public class MainController {
                     produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody CreatePaymentRequestResponse createPaymentRequest(@RequestBody CreatePaymentRequestRequest request)
             throws URISyntaxException, AddressFormatException, InvalidProtocolBufferException, ValidationException {
+        // Statement statement = new SimpleStatement();
+
+
         CreatePaymentRequestResponse response = new CreatePaymentRequestResponse();
         if (request == null)
             throw new ValidationException("Invalid CreatePaymentRequestRequest " + request);
@@ -64,7 +63,7 @@ public class MainController {
         if (id == null)
             throw new ValidationException("Could not generate unique id");
         PaymentRequest paymentRequest = newPaymentRequest(request, id);
-        insertPaymentRequest(id, hash, paymentRequest, request.getAckMemo());
+        paymentRequestDbService.insertPaymentRequest(id, hash, paymentRequest, request.getAckMemo());
         response.setUri(new URI("bitcoin:?r=" + BASE_URL + "p" + id));
         log.info("/create request {} response {}", request, response);
         return response;
@@ -74,12 +73,12 @@ public class MainController {
     private String uniquePaymentRequestId(String hash) throws InvalidProtocolBufferException {
         String baseId = new String(Base64.encodeBase64(hash.getBytes())).substring(0, 6);
         String id = baseId;
-        PaymentRequest paymentRequest = findPaymentRequest(id);
+        PaymentRequest paymentRequest = paymentRequestDbService.findPaymentRequestById(id);
         int hexIndex = 0;
         while (paymentRequest != null && hexIndex < 16) {
             log.warn("Duplication payment_request_id found {}. Trying hexIndex {}", id, hexIndex);
             id = baseId + hexArray[hexIndex++];
-            paymentRequest = findPaymentRequest(id);
+            paymentRequest = paymentRequestDbService.findPaymentRequestById(id);
         }
         if (hexIndex >= 16) {
             log.error("Could not create new unique payment_request_id for hash {}", hash);
@@ -95,7 +94,7 @@ public class MainController {
     public @ResponseBody PaymentRequest getPaymentRequest(@PathVariable String id)
             throws VerificationException, InvalidProtocolBufferException {
         System.out.println("id " + id);
-        PaymentRequest paymentRequest = findPaymentRequest(id);
+        PaymentRequest paymentRequest = paymentRequestDbService.findPaymentRequestById(id);
         if (paymentRequest == null)
             throw new VerificationException("No PaymentRequest found for id " + id);
         return paymentRequest;
@@ -111,7 +110,7 @@ public class MainController {
         PaymentACK.Builder ack = PaymentACK.newBuilder();
         ack.setMemo("Thank you for your payment! It is being processed by the bitcoin network.");
         ack.setPayment(payment);
-        PaymentRequest paymentRequest = findPaymentRequest(id);
+        PaymentRequest paymentRequest = paymentRequestDbService.findPaymentRequestById(id);
         if (paymentRequest == null)
             throw new VerificationException("Could not find entry for " + id);
         PaymentDetails paymentDetails = PaymentDetails.newBuilder().mergeFrom(paymentRequest.getSerializedPaymentDetails()).build();
@@ -183,54 +182,6 @@ public class MainController {
                 .setPkiType("none")
                 .setSerializedPaymentDetails(paymentDetails.toByteString())
                 .build();
-    }
-
-    private PaymentRequest findPaymentRequest(String id) throws InvalidProtocolBufferException {
-        log.debug("Querying for payment_request with id {}", id);
-        ResultSet result = cqlTemplate.query(cqlQueryPaymentRequest(id));
-        if (result == null || result.isExhausted()) {
-            log.debug("No result found for payment_request id {}", id);
-            return null;
-        }
-        Row row = result.one();
-        return PaymentRequest.newBuilder().mergeFrom(Hex.hexToBytes(row.getString("payment_request"))).build();
-    }
-
-    private String findPaymentRequestIdByHash(String hash) throws InvalidProtocolBufferException {
-        log.debug("Querying for payment_request with hash {}", hash);
-        ResultSet result = cqlTemplate.query(cqlQueryPaymentRequestByHash(hash));
-        if (result == null || result.isExhausted()) {
-            log.debug("No result found for payment_request hash {}", hash);
-            return null;
-        }
-        Row row = result.one();
-        return row.getString("id");
-    }
-
-    private void insertPaymentRequest(String id, String hash, PaymentRequest paymentRequest, String ackMemo) {
-        cqlTemplate.execute(cqlInsertPaymentRequest(id, hash, paymentRequest, ackMemo));
-    }
-
-    private String cqlQueryPaymentRequest(String id) {
-        // TODO: Sanitize inputs.
-        return "SELECT * FROM payment_requests WHERE id='" + id + "';";
-    }
-
-    private String cqlQueryPaymentRequestByHash(String hash) {
-        // TODO: Sanitize inputs.
-        return "SELECT * FROM payment_requests WHERE payment_request_hash='" + hash + "';";
-    }
-
-    private String cqlInsertPaymentRequest(String id, String hash, PaymentRequest paymentRequest, String ackMemo) {
-        // TODO: Sanitize inputs.
-        String keys = "id,payment_request_hash,payment_request";
-        String values = "'" + id + "','" + hash + "','" + Hex.bytesToHex(paymentRequest.toByteArray()) + "'";
-        if (ackMemo != null) {
-            keys += ",ack_memo";
-            values += ",'" + ackMemo + "'";
-        }
-        System.out.println("keys " + keys + " values " + values);
-        return "INSERT INTO payment_requests (" + keys + ") VALUES (" + values + ");";
     }
 
     @RequestMapping(value = "/broadcast",
