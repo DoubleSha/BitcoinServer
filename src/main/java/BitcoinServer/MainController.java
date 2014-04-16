@@ -106,6 +106,7 @@ public class MainController {
             pay(@RequestBody Payment payment, @PathVariable String id) throws IOException {
         log.info("/pay id {} payment {}", id, payment);
         PaymentACK.Builder ack = PaymentACK.newBuilder();
+        // TODO: Use the ackMemo saved in the db instead of this text.
         ack.setMemo("Thank you for your payment. It is being processed by the bitcoin network.");
         ack.setPayment(payment);
         PaymentRequest paymentRequest = paymentRequestDbService.findPaymentRequestById(id);
