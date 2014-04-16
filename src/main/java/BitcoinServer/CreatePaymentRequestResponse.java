@@ -3,6 +3,7 @@ package BitcoinServer;
 import java.net.URI;
 
 public class CreatePaymentRequestResponse {
+
     private URI uri;
 
     public URI getUri() {

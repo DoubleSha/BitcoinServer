@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class WebConfig {
+
     @Bean
     HttpMessageConverters httpMessageConverters() {
         return new HttpMessageConverters(new BitcoinHttpMessageConverter());

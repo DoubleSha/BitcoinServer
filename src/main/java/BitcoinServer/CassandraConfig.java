@@ -7,6 +7,7 @@ import org.springframework.data.cassandra.config.java.AbstractCassandraConfigura
 
 @Configuration
 public class CassandraConfig extends AbstractCassandraConfiguration {
+
     @Override
     public String getKeyspaceName() {
         return "misito";

@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 public class BitcoinHttpMessageConverter extends AbstractHttpMessageConverter<Message> {
+
     public BitcoinHttpMessageConverter() {
         setSupportedMediaTypes(Arrays.asList(new MediaType("application", "bitcoin-paymentrequest"),
                                              new MediaType("application", "bitcoin-payment"),

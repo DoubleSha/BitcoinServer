@@ -27,6 +27,7 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 public class MainController {
+
     private final Logger log = LoggerFactory.getLogger(MainController.class);
     private final String BASE_URL = "http://misito.net/";
 //    private final String BASE_URL = "http://173.8.166.105:8080/";
@@ -45,9 +46,6 @@ public class MainController {
                     produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody CreatePaymentRequestResponse createPaymentRequest(@RequestBody CreatePaymentRequestRequest request)
             throws URISyntaxException, AddressFormatException, InvalidProtocolBufferException, ValidationException {
-        // Statement statement = new SimpleStatement();
-
-
         CreatePaymentRequestResponse response = new CreatePaymentRequestResponse();
         if (request == null)
             throw new ValidationException("Invalid CreatePaymentRequestRequest " + request);
@@ -108,7 +106,7 @@ public class MainController {
             pay(@RequestBody Payment payment, @PathVariable String id) throws IOException {
         log.info("/pay id {} payment {}", id, payment);
         PaymentACK.Builder ack = PaymentACK.newBuilder();
-        ack.setMemo("Thank you for your payment! It is being processed by the bitcoin network.");
+        ack.setMemo("Thank you for your payment. It is being processed by the bitcoin network.");
         ack.setPayment(payment);
         PaymentRequest paymentRequest = paymentRequestDbService.findPaymentRequestById(id);
         if (paymentRequest == null)

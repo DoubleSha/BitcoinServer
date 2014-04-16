@@ -5,6 +5,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import java.math.BigInteger;
 
 public class CreatePaymentRequestRequest {
+
     private String address;
     private BigInteger amount;
     private String network;
