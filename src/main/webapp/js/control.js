@@ -28,10 +28,10 @@ $("#submitButton").click(function (e) {
   } else {
     //display errors
     if (isInvalidForm["Bitcoin Address"]) {
-      alert(isInvalidForm["Bitcoin Address"][0]);
+      alertify.error(isInvalidForm["Bitcoin Address"][0]);
     }
     if (isInvalidForm.Amount) {
-      alert(isInvalidForm.Amount[0]);
+      alertify.error(isInvalidForm.Amount[0]);
     }
   }
 
