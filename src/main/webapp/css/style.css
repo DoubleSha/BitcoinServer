@@ -102,6 +102,7 @@ letter-spacing: 10px;
 #container #form #advanceButton {
   color: #ccc;
   cursor: pointer;
+  text-decoration: underline;
 }
 #container #form #advanceMenu {
   height: 0px;

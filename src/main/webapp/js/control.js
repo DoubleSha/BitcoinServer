@@ -27,11 +27,11 @@ $("#submitButton").click(function (e) {
     });
   } else {
     //display errors
-    if (isInvalidForm.address) {
-      console.log("something wrong with address");
+    if (isInvalidForm["Bitcoin Address"]) {
+      alert(isInvalidForm["Bitcoin Address"][0]);
     }
-    if (isInvalidForm.amount) {
-      console.log("something wrong with amount");
+    if (isInvalidForm.Amount) {
+      alert(isInvalidForm.Amount[0]);
     }
   }
 

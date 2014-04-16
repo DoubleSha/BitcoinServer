@@ -4,14 +4,14 @@
 // }, "Please enter a correct bitcoin address");
 
 var constraints = {
-  address: {
+  "Bitcoin Address": {
     presence: true,
     format: {
       pattern: /^[13][a-zA-Z0-9]{26,33}$/,
-      message: "Please enter a correct bitcoin address"
+      message: "is not valid"
     }
   },
-  amount: {
+  Amount: {
     presence: true,
     numericality: {
       onlyInteger: true,
@@ -23,8 +23,8 @@ var constraints = {
 
 function checkForm() {
   var v = validate({
-    address: $("#address").val(),
-    amount: $("#amount").val()
+    "Bitcoin Address": $("#address").val(),
+    Amount: $("#amount").val()
   }, constraints);
   if (v) {
     console.log(v)
