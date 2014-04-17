@@ -19,7 +19,8 @@ $("#submitButton").click(function (e) {
         // This outputs the result of the ajax request
         console.log(data);
         $("#form").fadeOut();
-        $("#responseURI").html(data.uri)
+        $("#responseURI").html(data.uri);
+        $("#tShare").attr("data-url", data.uri);
         $("#response").css({
           opacity: 1
         });
@@ -52,3 +53,8 @@ $("#advanceButton").click(function () {
     closeMenu();
   }
 });
+
+//social
+$(document).ready(function () {
+  Socialite.load($(this)[0]);
+})

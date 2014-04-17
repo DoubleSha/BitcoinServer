@@ -23,7 +23,7 @@ body {
 #container #logo .content {
   position: absolute;
   top:355px;
-  min-height: 300px;
+  min-height: 200px;
 }
 
 #container #logo .content .bold {

@@ -1,8 +1,9 @@
 <head>
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="http://yui.yahooapis.com/combo?pure/0.4.2/base-min.css&pure/0.4.2/forms-min.css">
   <link rel="stylesheet" href="css/alertify.core.css">
   <link rel="stylesheet" href="css/alertify.default.css">
+  <link rel="stylesheet" href="css/social.css">
+  <link rel="stylesheet" href="http://yui.yahooapis.com/combo?pure/0.4.2/base-min.css&pure/0.4.2/forms-min.css">
 </head>
 <body>
   <div id="container">
@@ -34,6 +35,20 @@
     <div id="response">
       <h1>Here's your bitcoin url:</h1>
       <div id="responseURI"></div>
+      <div id="fb-root" class="fb_reset"></script>
+      <div id="social">
+        <ul class="social-buttons cf">
+          <li>
+            <a id="tShare" href="http://twitter.com/share" class="socialite twitter-share" data-text="my bitcoin payment link: " data-url="http://misito.net/" data-count="vertical" rel="nofollow" target="_blank"><span class="vhidden">Share on Twitter</span></a>
+          </li>
+          <li>
+            <a id="fShare" href="http://www.facebook.com/sharer.php?u=http://www.misito.net&t=Misito" class="socialite facebook-like" data-href="http://misito.net" data-send="false" data-layout="box_count" data-width="60" data-show-faces="false" rel="nofollow" target="_blank"><span class="vhidden">Share on Facebook</span></a>
+          </li>
+          <li>
+            <a id="lShare" href="http://www.linkedin.com/shareArticle?mini=true&url=http://misito.net&title=Misito" class="socialite linkedin-share" data-url="http://misito.net" data-counter="top" rel="nofollow" target="_blank"><span class="vhidden">Share on LinkedIn</span></a>
+          </li>
+        </ul>
+      </div>
       <div id="goBack">Start Over</div>
     </div>
 
@@ -42,7 +57,12 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
   <script src="http://validatejs.org/validate.min.js"></script>
   <script src="js/alertify.min.js"></script>
+  <script src="js/socialite.min.js"></script>
   <script src="js/validate.js"></script>
   <script src="js/slide.js"></script>
   <script src="js/control.js"></script>
+
+  <script id="twitter-wjs" src="http://platform.twitter.com/widgets.js" charset="utf-8" async=""></script>
+<script id="facebook-jssdk" src="http://connect.facebook.net/en_GB/all.js" async=""></script>
+<script src="http://platform.linkedin.com/in.js" async=""></script>
 </body>
