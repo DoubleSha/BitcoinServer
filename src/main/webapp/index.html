@@ -1,6 +1,8 @@
 <head>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="http://yui.yahooapis.com/combo?pure/0.4.2/base-min.css&pure/0.4.2/forms-min.css">
+  <link rel="stylesheet" href="css/alertify.core.css">
+  <link rel="stylesheet" href="css/alertify.default.css">
 </head>
 <body>
   <div id="container">
@@ -18,7 +20,8 @@
         <fieldset>
           <input id="address" type="text" placeholder="Address">
           <input id="amount" type="text" placeholder="Amount (mBTC)">
-          <div class="hidden">
+          <div id="advanceButton">Customize it!</div>
+          <div id="advanceMenu" class="hidden">
             <input id="memo" type="text" placeholder="Memo">
             <input id="ackMemo" type="text" placeholder="Ack Memo">
           </div>
@@ -35,39 +38,11 @@
     </div>
 
   </div>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
-  <!-- Don't give a shit if UI is shit code, it's fucking UI -->
-  <script>
-  $("#submitButton").click(function() {
-    var apiUri = "/create";
-    $.ajax({
-      type: "POST",
-      contentType: "application/json",
-      dataType: "json",
-      url: apiUri,
-      data: JSON.stringify({
-        'address':$('#address').val() || 'invalidAddress',
-        'amount' : $('#amount').val()*100000 || 0,
-        'network' : 'test',
-        'memo': $('#memo').val() || 'default memo',
-        'ackMemo': $('#ackMemo').val() || 'default ackmemo'
-      }),
-      success:function(data) {
-            // This outputs the result of the ajax request
-            console.log(data);
-            $("#form").fadeOut();
-            $("#responseURI").html(data.uri)
-            $("#response").css({ opacity: 1});
-          }
-        });
-  });
-
-  $("#goBack").click(function(){
-      //hide response and show form
-      $("#response").css({ opacity: 0});
-      $("#form").fadeIn();
-
-
-    })
-  </script>
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.0.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
+  <script src="http://validatejs.org/validate.min.js"></script>
+  <script src="js/alertify.min.js"></script>
+  <script src="js/validate.js"></script>
+  <script src="js/slide.js"></script>
+  <script src="js/control.js"></script>
 </body>

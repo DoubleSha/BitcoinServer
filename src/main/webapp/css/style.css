@@ -1,6 +1,11 @@
 body {
   background-color: #57585a;
 }
+
+.hidden {
+  opacity: 0;
+}
+
 #container {
   width: 70%;
   margin: 0 auto;
@@ -93,6 +98,14 @@ letter-spacing: 10px;
   outline: none;
   -webkit-box-shadow: none;
   box-shadow: none;
+}
+#container #form #advanceButton {
+  color: #ccc;
+  cursor: pointer;
+  text-decoration: underline;
+}
+#container #form #advanceMenu {
+  height: 0px;
 }
 
 /*RESPONSE SHIT*/
