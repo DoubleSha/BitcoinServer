@@ -24,6 +24,26 @@ $("#submitButton").click(function (e) {
         $("#response").css({
           opacity: 1
         });
+
+        //copy to clipboard stuff
+        // copy to clipboard
+        ZeroClipboard.config({
+          moviePath: 'ZeroClipboard.swf',
+          trustedDomains: [window.location.host],
+        });
+        var client = new ZeroClipboard($("#copyButton"));
+
+        client.on("ready", function (readyEvent) {
+          console.log("ZeroClipboard SWF is ready!");
+
+          client.on('dataRequested', function (client, args) {
+            client.setText(data.uri);
+          });
+
+          client.on("aftercopy", function (event) {
+            console.log("Copied text to clipboard: " + event.data["text/plain"]);
+          });
+        });
       }
     });
   } else {
@@ -54,7 +74,7 @@ $("#advanceButton").click(function () {
   }
 });
 
-//social
+//social sharing
 $(document).ready(function () {
   Socialite.load($(this)[0]);
 })

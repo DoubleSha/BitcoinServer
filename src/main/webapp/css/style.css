@@ -23,7 +23,7 @@ body {
 #container #logo .content {
   position: absolute;
   top:355px;
-  min-height: 200px;
+  min-height: 300px;
 }
 
 #container #logo .content .bold {
@@ -113,8 +113,43 @@ letter-spacing: 10px;
   width: 49%;
   display: inline-block;
   padding:200 0px;
+  /*SHOW HIDE RESPONSE SCREEN*/
   opacity: 0;
   color: #f2f3f4;
+}
+
+#container #response #copyURLSection {
+  height: 32px;
+  width: 407;
+  padding: 5px;
+  position: relative;
+  text-align: right;
+}
+
+#container #response #copyURLSection #responseURI{
+  height: 32px;
+  width: 355px;
+  border: #ccc 1px solid;
+  border-radius: 5px;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 22px;
+  position: absolute;
+  left: 0;
+  text-align: left;
+  padding: 10 10 0 10px;
+  color: #000;
+  background: #cecece;
+}
+#container #response #copyURLSection #copyButton{
+  background: #57585a url("../images/copy.png") no-repeat right top;
+  background-size:32px;
+  height: 32px;
+  width: 32px;
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 5 0px
 }
 
 #container #response #goBack {

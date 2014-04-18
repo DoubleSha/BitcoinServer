@@ -34,8 +34,11 @@
     <!-- Response -->
     <div id="response">
       <h1>Here's your bitcoin url:</h1>
-      <div id="responseURI"></div>
-      <div id="fb-root" class="fb_reset"></script>
+      <div id="copyURLSection">
+        <div id="responseURI">Bitcoin:?http://misito.net/xxxxxx</div>
+        <div id="copyButton" data-clipboard-text="Copy Me!" title="Click to copy me."></div>
+      </div>
+      <div id="fb-root" class="fb_reset"></div>
       <div id="social">
         <ul class="social-buttons cf">
           <li>
@@ -58,6 +61,7 @@
   <script src="http://validatejs.org/validate.min.js"></script>
   <script src="js/alertify.min.js"></script>
   <script src="js/socialite.min.js"></script>
+  <script src="js/zeroClipboard.min.js"></script>
   <script src="js/validate.js"></script>
   <script src="js/slide.js"></script>
   <script src="js/control.js"></script>
