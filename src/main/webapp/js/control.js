@@ -21,7 +21,7 @@ $("#submitButton").click(function (e) {
         $("#form").fadeOut();
         $("#responseURI").html(data.uri)
         $("#response").css({
-          opacity: 1
+          "display": "inline-block"
         });
       }
     });
@@ -51,4 +51,18 @@ $("#advanceButton").click(function () {
   } else {
     closeMenu();
   }
+});
+
+
+//fancybox
+$(".fancyLinks").fancybox({
+  maxWidth: 800,
+  maxHeight: 600,
+  fitToView: false,
+  width: '70%',
+  height: '70%',
+  autoSize: false,
+  closeClick: false,
+  openEffect: 'none',
+  closeEffect: 'none'
 });
