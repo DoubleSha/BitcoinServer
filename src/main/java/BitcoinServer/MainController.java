@@ -29,7 +29,7 @@ import java.util.concurrent.ExecutionException;
 public class MainController {
 
     private final Logger log = LoggerFactory.getLogger(MainController.class);
-    private final String BASE_URL = "http://misito.net/";
+    private final String BASE_URL = "http://dblsha.com/";
 //    private final String BASE_URL = "http://173.8.166.105:8080/";
 
     @Autowired
