@@ -22,14 +22,27 @@ body {
 
 #container #logo .content {
   position: absolute;
-  top:335px;
+  top:305px;
 }
 
 #container #logo #leftLinks {
   position: absolute;
-  top:415px;
+  top:395px;
   font-size: 12px;
   margin: 40px;
+}
+
+#container #logo #leftLinks #getStartedButton {
+  padding: 10 100px;
+    background:#cecece;
+    cursor: pointer;
+    border: #999 1px solid;
+    border-radius: 5px;
+    margin: 10 0px;
+}
+#container #logo #leftLinks #getStartedButton a {
+  color: #2c3e50;
+  text-decoration: none;
 }
 #container #logo #leftLinks li {
   display: inline;
@@ -168,4 +181,34 @@ letter-spacing: 10px;
   outline: none;
   -webkit-box-shadow: none;
   box-shadow: none;
+}
+
+#getStarted {
+  display: none;
+  color:#7f8c8d;
+}
+#getStarted #vid {
+  margin: auto 0;
+}
+#getStarted .title {
+  font-size: 18px;
+  padding: 5px;
+}
+#getStarted li {
+  display: block;
+  padding: 5px;
+  border: #ccc 1px solid;
+  margin:5px;
+    cursor: pointer;
+}
+#getStarted li:hover {
+  background-color: #ecf0f1;
+}
+#getStarted li.faq div.question {
+  color: #27ae60;
+}
+
+#getStarted li.faq div.answer {
+  display: none;
+  padding: 10px;
 }

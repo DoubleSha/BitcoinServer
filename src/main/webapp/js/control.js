@@ -1,7 +1,7 @@
 $("#submitButton").click(function (e) {
   var apiUri = "/create",
-  // TODO: Fix this and re-enable.
-  isInvalidForm = null; // checkForm();
+    // TODO: Fix this and re-enable.
+    isInvalidForm = null; // checkForm();
   e.preventDefault();
   if (!isInvalidForm) {
     $.ajax({
@@ -66,4 +66,9 @@ $(".fancyLinks").fancybox({
   closeClick: false,
   openEffect: 'none',
   closeEffect: 'none'
+});
+
+//faq
+$("#getStarted li.faq").click(function () {
+  $(this).find(".answer").slideToggle();
 });
