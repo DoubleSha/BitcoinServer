@@ -33,12 +33,16 @@ body {
 }
 
 #container #logo #leftLinks #getStartedButton {
-  padding: 10 100px;
+  padding: 6 10px;
     background:#cecece;
     cursor: pointer;
     border: #999 1px solid;
     border-radius: 5px;
     margin: 10 0px;
+    font-size: 30px;
+}
+#container #logo #leftLinks #getStartedButton:hover {
+  background: #eee;
 }
 #container #logo #leftLinks #getStartedButton a {
   color: #2c3e50;
