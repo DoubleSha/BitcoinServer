@@ -2,7 +2,7 @@ function openMenu() {
   console.log('open menu');
   $('#advanceMenu').css('opacity', '1');
   $('#advanceMenu').animate({
-    height: '152px'
+    height: '209px'
   }, 400, 'easeOutBack');
 }
 
