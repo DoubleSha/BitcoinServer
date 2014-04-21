@@ -22,12 +22,12 @@ body {
 
 #container #logo .content {
   position: absolute;
-  top:305px;
+  top:285px;
 }
 
 #container #logo #leftLinks {
   position: absolute;
-  top:395px;
+  top:375px;
   font-size: 12px;
   margin: 40px;
 }
@@ -190,6 +190,9 @@ letter-spacing: 10px;
 #getStarted {
   display: none;
   color:#7f8c8d;
+}
+#getStarted p {
+  color: #283;
 }
 #getStarted #vid {
   margin: auto 0;
