@@ -22,12 +22,12 @@ body {
 
 #container #logo .content {
   position: absolute;
-  top:285px;
+  top:235px;
 }
 
 #container #logo #leftLinks {
   position: absolute;
-  top:375px;
+  top:325px;
   font-size: 12px;
   margin: 40 20px;
 }
@@ -97,7 +97,7 @@ body {
 #container #form {
   width: 49%;
   display: inline-block;
-  padding:200 0px;
+  padding:150 0px;
 }
 
 #container #form #form-header {
@@ -156,7 +156,7 @@ letter-spacing: 10px;
 #container #response {
   width: 49%;
   display: inline-block;
-  padding:200 0px;
+  padding:150 0px;
   display:none;
   color: #f2f3f4;
 }
@@ -176,7 +176,7 @@ letter-spacing: 10px;
   border-radius: 5px;
   display: inline-block;
   vertical-align: middle;
-  font-size: 22px;
+  font-size: 18px;
   position: absolute;
   left: 0;
   text-align: left;
