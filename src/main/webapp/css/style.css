@@ -2,6 +2,11 @@ body {
   background-color: #57585a;
 }
 
+textarea {
+  width: 425px;
+  height:100px;
+}
+
 .hidden {
   opacity: 0;
 }
