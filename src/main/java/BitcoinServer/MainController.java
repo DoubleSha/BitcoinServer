@@ -157,22 +157,24 @@ public class MainController {
     private PaymentRequest newPaymentRequest(CreatePaymentRequestRequest createRequest, String id)
             throws AddressFormatException, VerificationException {
         // TODO: Ask the PaymentRequestNotary server for the payment request instead of creating it here.
-        NetworkParameters params = null;
-        if (createRequest.getNetwork() == null || createRequest.getNetwork().equals("main"))
-            params = MainNetParams.get();
-        else if (createRequest.getNetwork().equals("test"))
-            params = TestNet3Params.get();
-        if (params == null)
-            throw new VerificationException("Invalid network " + createRequest.getNetwork());
+        Address addr = new Address(null, createRequest.getAddress());
+        NetworkParameters params = addr.getParameters();
+        String network = null;
+        if (params.equals(MainNetParams.get()))
+            network = "main";
+        else if (params.equals(TestNet3Params.get()))
+            network = "test";
+        if (network == null)
+            throw new VerificationException("Invalid network " + network);
         Output.Builder outputBuilder = Output.newBuilder()
                 .setAmount(createRequest.getAmount().longValue())
-                .setScript(ByteString.copyFrom(ScriptBuilder.createOutputScript(new Address(params, createRequest.getAddress())).getProgram()));
+                .setScript(ByteString.copyFrom(ScriptBuilder.createOutputScript(addr).getProgram()));
         PaymentDetails paymentDetails = PaymentDetails.newBuilder()
-                .setNetwork(createRequest.getNetwork())
+                .setNetwork(network)
                 .setTime(System.currentTimeMillis() / 1000L)
                 .setPaymentUrl(BASE_URL + "/pay/" + id)
                 .addOutputs(outputBuilder)
-                .setMemo(createRequest.getNetwork())
+                .setMemo(network)
                 .build();
         return PaymentRequest.newBuilder()
                 .setPaymentDetailsVersion(1)

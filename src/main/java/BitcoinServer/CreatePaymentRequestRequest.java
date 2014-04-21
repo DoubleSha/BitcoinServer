@@ -8,7 +8,6 @@ public class CreatePaymentRequestRequest {
 
     private String address;
     private BigInteger amount;
-    private String network;
     private String memo;
     private String ackMemo;
 
@@ -26,14 +25,6 @@ public class CreatePaymentRequestRequest {
 
     public void setAmount(BigInteger amount) {
         this.amount = amount;
-    }
-
-    public String getNetwork() {
-        return network;
-    }
-
-    public void setNetwork(String network) {
-        this.network = network;
     }
 
     public String getMemo() {
@@ -56,12 +47,11 @@ public class CreatePaymentRequestRequest {
     public String toString() {
         return "{ address: " + getAddress()
                 + ", amount: " + getAmount()
-                + ", network: " + getNetwork()
                 + ", memo: " + getMemo()
                 + ", ackMemo: " + getAckMemo() + " }";
     }
 
     public String hash() {
-        return DigestUtils.shaHex("" + getAddress() + getAmount() + getNetwork() + getMemo() + getAckMemo());
+        return DigestUtils.shaHex("" + getAddress() + getAmount() + getMemo() + getAckMemo());
     }
 }

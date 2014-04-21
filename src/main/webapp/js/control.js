@@ -12,7 +12,6 @@ $("#submitButton").click(function (e) {
       data: JSON.stringify({
         'address': $('#address').val() || 'invalidAddress',
         'amount': $('#amount').val() * 100000 || 0,
-        'network': 'test',
         'memo': $('#memo').val() || 'default memo',
         'ackMemo': $('#ackMemo').val() || 'default ackmemo'
       }),
