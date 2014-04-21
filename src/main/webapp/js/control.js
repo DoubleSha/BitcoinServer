@@ -1,7 +1,6 @@
 $("#submitButton").click(function (e) {
   var apiUri = "/create",
-    // TODO: Fix this and re-enable.
-    isInvalidForm = null; // checkForm();
+    isInvalidForm = checkForm();
   e.preventDefault();
   if (!isInvalidForm) {
     $.ajax({

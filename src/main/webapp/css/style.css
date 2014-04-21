@@ -22,23 +22,27 @@ body {
 
 #container #logo .content {
   position: absolute;
-  top:305px;
+  top:285px;
 }
 
 #container #logo #leftLinks {
   position: absolute;
-  top:395px;
+  top:375px;
   font-size: 12px;
   margin: 40px;
 }
 
 #container #logo #leftLinks #getStartedButton {
-  padding: 10 100px;
+  padding: 6 10px;
     background:#cecece;
     cursor: pointer;
     border: #999 1px solid;
     border-radius: 5px;
     margin: 10 0px;
+    font-size: 30px;
+}
+#container #logo #leftLinks #getStartedButton:hover {
+  background: #eee;
 }
 #container #logo #leftLinks #getStartedButton a {
   color: #2c3e50;
@@ -186,6 +190,9 @@ letter-spacing: 10px;
 #getStarted {
   display: none;
   color:#7f8c8d;
+}
+#getStarted p {
+  color: #283;
 }
 #getStarted #vid {
   margin: auto 0;

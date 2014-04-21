@@ -7,7 +7,7 @@ var constraints = {
   "Bitcoin Address": {
     presence: true,
     format: {
-      pattern: /^[13][a-zA-Z0-9]{26,33}$/,
+      pattern: /^[123mn][a-zA-Z0-9]{26,33}$/,
       message: "is not valid"
     }
   },
