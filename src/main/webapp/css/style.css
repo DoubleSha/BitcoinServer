@@ -29,7 +29,7 @@ body {
   position: absolute;
   top:375px;
   font-size: 12px;
-  margin: 40px;
+  margin: 40 20px;
 }
 
 #container #logo #leftLinks #getStartedButton {
@@ -40,6 +40,7 @@ body {
     border-radius: 5px;
     margin: 10 0px;
     font-size: 30px;
+    text-align: center;
 }
 #container #logo #leftLinks #getStartedButton:hover {
   background: #eee;
@@ -52,11 +53,11 @@ body {
   display: inline;
   padding: 0 5px;
   border-left: #fff 1px solid;
-  cursor: pointer;
 }
 
 #container #logo #leftLinks li.firstList {
   border-left:0;
+  color: #ccc;
 }
 
 #container #logo #leftLinks li a {
