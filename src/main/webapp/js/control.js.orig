@@ -73,6 +73,12 @@ $("#advanceButton").click(function () {
   }
 });
 
+<<<<<<< HEAD
+//social sharing
+$(document).ready(function () {
+  Socialite.load($(this)[0]);
+})
+=======
 
 //fancybox
 $(".fancyLinks").fancybox({
@@ -91,8 +97,4 @@ $(".fancyLinks").fancybox({
 $("#getStarted li.faq").click(function () {
   $(this).find(".answer").slideToggle();
 });
-
-//social sharing
-$(document).ready(function () {
-  Socialite.load($(this)[0]);
-})
+>>>>>>> master

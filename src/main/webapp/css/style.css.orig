@@ -157,7 +157,12 @@ letter-spacing: 10px;
   width: 49%;
   display: inline-block;
   padding:200 0px;
+<<<<<<< HEAD
+  /*SHOW HIDE RESPONSE SCREEN*/
+  opacity: 0;
+=======
   display:none;
+>>>>>>> master
   color: #f2f3f4;
 }
 

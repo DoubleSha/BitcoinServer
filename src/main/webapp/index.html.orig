@@ -1,10 +1,16 @@
 <head>
   <link rel="stylesheet" href="css/style.css">
+<<<<<<< HEAD
+  <link rel="stylesheet" href="css/alertify.core.css">
+  <link rel="stylesheet" href="css/alertify.default.css">
+  <link rel="stylesheet" href="css/social.css">
+  <link rel="stylesheet" href="http://yui.yahooapis.com/combo?pure/0.4.2/base-min.css&pure/0.4.2/forms-min.css">
+=======
+  <link rel="stylesheet" href="http://yui.yahooapis.com/combo?pure/0.4.2/base-min.css&pure/0.4.2/forms-min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/alertify.js/0.3.11/alertify.core.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/alertify.js/0.3.11/alertify.default.css">
-  <link rel="stylesheet" href="css/social.css">
-  <link rel="stylesheet" href="http://yui.yahooapis.com/combo?pure/0.4.2/base-min.css&pure/0.4.2/forms-min.css">
+>>>>>>> master
 </head>
 <body>
   <div id="container">
@@ -51,8 +57,8 @@
     <div id="response">
       <h1>Here's your bitcoin url:</h1>
       <div id="copyURLSection">
-        <div id="responseURI">bitcoin:?r=http://dblsha.com/xxxxxx</div>
-        <div id="copyButton" data-clipboard-text="bitcoin:?r=http://dblsha.com/" title="Click to copy bitcoin url."></div>
+        <div id="responseURI">Bitcoin:?http://misito.net/xxxxxx</div>
+        <div id="copyButton" data-clipboard-text="Bitcoin:?http://misito.net/" title="Click to copy me."></div>
       </div>
       <div id="fb-root" class="fb_reset"></div>
       <div id="social">
@@ -124,10 +130,14 @@
   <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.0.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
   <script src="http://validatejs.org/validate.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/alertify.js/0.3.11/alertify.min.js"></script>
+<<<<<<< HEAD
+  <script src="js/alertify.min.js"></script>
   <script src="js/socialite.min.js"></script>
   <script src="js/zeroClipboard.min.js"></script>
+=======
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/alertify.js/0.3.11/alertify.min.js"></script>
+>>>>>>> master
   <script src="js/validate.js"></script>
   <script src="js/slide.js"></script>
   <script src="js/control.js"></script>

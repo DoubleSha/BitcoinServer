@@ -1,6 +1,5 @@
 package BitcoinServer;
 
-import com.BitcoinServer.Protos.*;
 import com.google.bitcoin.core.*;
 import com.google.bitcoin.net.discovery.DnsDiscovery;
 import com.google.bitcoin.params.MainNetParams;
@@ -22,14 +21,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 @RestController
 public class MainController {
 
     private final Logger log = LoggerFactory.getLogger(MainController.class);
-    private final String BASE_URL = "http://misito.net/";
+    private final String BASE_URL = "http://dblsha.com/";
 //    private final String BASE_URL = "http://173.8.166.105:8080/";
 
     @Autowired
@@ -159,120 +157,30 @@ public class MainController {
     private PaymentRequest newPaymentRequest(CreatePaymentRequestRequest createRequest, String id)
             throws AddressFormatException, VerificationException {
         // TODO: Ask the PaymentRequestNotary server for the payment request instead of creating it here.
-        NetworkParameters params = null;
-        if (createRequest.getNetwork() == null || createRequest.getNetwork().equals("main"))
-            params = MainNetParams.get();
-        else if (createRequest.getNetwork().equals("test"))
-            params = TestNet3Params.get();
-        if (params == null)
-            throw new VerificationException("Invalid network " + createRequest.getNetwork());
+        Address addr = new Address(null, createRequest.getAddress());
+        NetworkParameters params = addr.getParameters();
+        String network = null;
+        if (params.equals(MainNetParams.get()))
+            network = "main";
+        else if (params.equals(TestNet3Params.get()))
+            network = "test";
+        if (network == null)
+            throw new VerificationException("Invalid network " + network);
         Output.Builder outputBuilder = Output.newBuilder()
                 .setAmount(createRequest.getAmount().longValue())
-                .setScript(ByteString.copyFrom(ScriptBuilder.createOutputScript(new Address(params, createRequest.getAddress())).getProgram()));
+                .setScript(ByteString.copyFrom(ScriptBuilder.createOutputScript(addr).getProgram()));
         PaymentDetails paymentDetails = PaymentDetails.newBuilder()
-                .setNetwork(createRequest.getNetwork())
+                .setNetwork(network)
                 .setTime(System.currentTimeMillis() / 1000L)
                 .setPaymentUrl(BASE_URL + "/pay/" + id)
                 .addOutputs(outputBuilder)
-                .setMemo(createRequest.getNetwork())
+                .setMemo(network)
                 .build();
         return PaymentRequest.newBuilder()
                 .setPaymentDetailsVersion(1)
                 .setPkiType("none")
                 .setSerializedPaymentDetails(paymentDetails.toByteString())
                 .build();
-    }
-
-    @RequestMapping(value = "/broadcast",
-            method = RequestMethod.POST,
-            consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE,
-            produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public @ResponseBody BroadcastPaymentResponse broadcast(@RequestBody BroadcastPayment broadcastPayment) {
-        BroadcastPaymentResponse.Builder response = BroadcastPaymentResponse.newBuilder();
-        PaymentRequest paymentRequest = broadcastPayment.getPaymentRequest();
-        Payment payment = broadcastPayment.getPayment();
-        PaymentDetails paymentDetails = null;
-        NetworkParameters params = null;
-        PeerGroup peerGroup = null;
-        try {
-            paymentDetails = PaymentDetails.newBuilder().mergeFrom(paymentRequest.getSerializedPaymentDetails()).build();
-        } catch (InvalidProtocolBufferException e) {
-            response.setError("Invalid PaymentDetails " + e);
-            log.info("Broadcast failed with error: {} payment: {}", response.getError(), broadcastPayment);
-            return response.build();
-        }
-        if (paymentDetails == null) {
-            response.setError("Invalid PaymentDetails");
-            log.info("Broadcast failed with error: {} payment: {}", response.getError(), broadcastPayment);
-            return response.build();
-        }
-        if (!paymentDetails.hasNetwork() || paymentDetails.getNetwork().equals("main"))
-            params = MainNetParams.get();
-        else if (paymentDetails.getNetwork().equals("test"))
-            params = TestNet3Params.get();
-        if (params == null) {
-            response.setError("Invalid network");
-            log.info("Broadcast failed with error: {} payment: {}", response.getError(), broadcastPayment);
-            return response.build();
-        }
-        // Decode and validate all transactions.
-        ArrayList<Transaction> txs = new ArrayList<Transaction>();
-        double txSum = 0;
-        for (ByteString encodedTx : payment.getTransactionsList()) {
-            Transaction tx = null;
-            try {
-                tx = new Transaction(params, encodedTx.toByteArray());
-                tx.verify();
-                txs.add(tx);
-                for (TransactionOutput txOut : tx.getOutputs()) {
-                    for (Output reqOut : paymentDetails.getOutputsList()) {
-                        if (Arrays.equals(txOut.getScriptBytes(), reqOut.getScript().toByteArray()))
-                            txSum += txOut.getValue().doubleValue();
-                    }
-                }
-            } catch (VerificationException e) {
-                response.setError("Invalid transaction " + e);
-                log.info("Broadcast failed with error: {} payment: {}", response.getError(), broadcastPayment);
-                return response.build();
-            }
-        }
-        if (txs.isEmpty()) {
-            response.setError("Empty transactions");
-            log.info("Broadcast failed with error: {} payment: {}", response.getError(), broadcastPayment);
-            return response.build();
-        }
-        if (txSum == 0) {
-            response.setError("No transactions matching outputs in PaymentRequest");
-            log.info("Broadcast failed with error: {} payment: {}", response.getError(), broadcastPayment);
-            return response.build();
-        }
-        // Verify that the value of the Payment is what we expect.
-        double outSum = 0;
-        for (Output out : paymentDetails.getOutputsList())
-            outSum += out.getAmount();
-        if (txSum != outSum) {
-            response.setError("Transaction value: " + txSum + " does not match expected PaymentRequest value: " + outSum);
-            log.info("Broadcast failed with error: {} payment: {}", response.getError(), broadcastPayment);
-            return response.build();
-        }
-        // Transactions are valid, now broadcast them.
-        try {
-            peerGroup = new PeerGroup(params);
-            peerGroup.addPeerDiscovery(new DnsDiscovery(params));
-            peerGroup.startAndWait();
-            for (Transaction tx : txs)
-                peerGroup.broadcastTransaction(tx).get();
-        } catch (InterruptedException e) {
-            response.setError("Failed to send transactions " + e);
-        } catch (ExecutionException e) {
-            response.setError("Failed to send transactions " + e);
-        }
-        peerGroup.stopAndWait();
-        if (response.hasError())
-            log.info("Broadcast failed with error: {} payment: {}", response.getError(), broadcastPayment);
-        else
-            log.info("Broadcast succeeded payment: {}", broadcastPayment);
-        return response.build();
     }
 
     @RequestMapping(value = "/test_pay",
