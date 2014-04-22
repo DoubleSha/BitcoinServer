@@ -1,7 +1,7 @@
 //home
 $("#showForm").click(function (e) {
   e.preventDefault();
-  $("#logo").hide();
+  $("#leftLinks").hide();
   $("#form").fadeIn();
 });
 
