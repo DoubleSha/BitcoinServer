@@ -151,7 +151,8 @@ textarea {
   color: #fff;
 }
 #container #form #advanceMenu {
-  height: 0px;
+  /*height: 0px;*/
+  display: none;
 }
 
 /*RESPONSE SHIT*/

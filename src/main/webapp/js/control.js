@@ -52,11 +52,12 @@ $("#goBack").click(function () {
 });
 
 $("#advanceButton").click(function () {
-  if ($("#advanceMenu").css("opacity") == 0) {
-    openMenu();
-  } else {
-    closeMenu();
-  }
+  // if ($("#advanceMenu").css("opacity") == 0) {
+  //   openMenu();
+  // } else {
+  //   closeMenu();
+  // }
+  $("#advanceMenu").slideToggle();
 });
 
 
