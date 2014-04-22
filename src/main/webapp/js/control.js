@@ -11,8 +11,8 @@ $("#submitButton").click(function (e) {
       data: JSON.stringify({
         'address': $('#address').val() || 'invalidAddress',
         'amount': $('#amount').val() * 100000 || 0,
-        'memo': $('#memo').val() || 'default memo',
-        'ackMemo': $('#ackMemo').val() || 'default ackmemo'
+        'memo': $('#memo').val() || 'Click or tap "Send" to broadcast payment',
+        'ackMemo': $('#ackMemo').val() || 'Thanks! Your payment is being processed by the Bitcoin network. Create your own Bitcoin link at DoubleSha.com.'
       }),
       success: function (data) {
         // This outputs the result of the ajax request
@@ -33,7 +33,6 @@ $("#submitButton").click(function (e) {
       alertify.error(isInvalidForm.Amount[0]);
     }
   }
-
 });
 
 $("#goBack").click(function () {
