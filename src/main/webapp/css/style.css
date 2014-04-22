@@ -27,7 +27,7 @@ textarea {
 
 #container #logo .content {
   position: absolute;
-  top:285px;
+  top:255px;
 }
 
 #container #logo #leftLinks {
@@ -91,6 +91,17 @@ textarea {
 #container #logo .content .dot {
   font-size: 150%;
   margin: -15px;
+}
+
+#container #logo #double {
+  font-size: 70%;
+  margin-left: 50px;
+}
+
+#container #logo #sha {
+  text-align: right;
+  margin-top: -20px;
+  font-family: 'Varela Round', 'sans-serif';
 }
 
 #container #logo .content .loose {
