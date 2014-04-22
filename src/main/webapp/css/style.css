@@ -139,6 +139,7 @@ textarea {
 #container #form #submitButton {
   margin:auto 0;
   width: 380px;
+  margin-top:10px;
 }
 #container #form #advanceButton {
   color: #ccc;
