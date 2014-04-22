@@ -10,7 +10,7 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
 
     @Override
     public String getKeyspaceName() {
-        return "misito";
+        return "dblsha";
     }
 
     @Bean
