@@ -1,3 +1,20 @@
+//home
+$("#showForm").click(function (e) {
+  e.preventDefault();
+  $("#leftLinks").hide();
+  $("#form").fadeIn();
+  $("#backHome").fadeIn();
+});
+
+//form
+
+$("#backHome").click(function (e) {
+  e.preventDefault();
+  $("#form").hide();
+  $("#backHome").hide();
+  $("#leftLinks").fadeIn();
+});
+
 $("#submitButton").click(function (e) {
   var apiUri = "/create",
     isInvalidForm = checkForm();
@@ -41,14 +58,16 @@ $("#goBack").click(function () {
     opacity: 0
   });
   $("#form").fadeIn();
+  $("#backHome").fadeIn();
 });
 
 $("#advanceButton").click(function () {
-  if ($("#advanceMenu").css("opacity") == 0) {
-    openMenu();
-  } else {
-    closeMenu();
-  }
+  // if ($("#advanceMenu").css("opacity") == 0) {
+  //   openMenu();
+  // } else {
+  //   closeMenu();
+  // }
+  $("#advanceMenu").slideToggle();
 });
 
 

@@ -3,8 +3,9 @@ body {
 }
 
 textarea {
-  width: 425px;
+  width: 400px;
   height:100px;
+  margin: 15px 0;
 }
 
 .hidden {
@@ -12,46 +13,51 @@ textarea {
 }
 
 #container {
-  width: 70%;
+  width: 600px;
   margin: 0 auto;
+  margin-top: 200px;
 }
 
 /*LOGO SHIT*/
 
 #container #logo {
-  width: 49%;
+  width: 100%;
   display: inline-block;
   font-size: 70px;
-  margin: auto;
+  margin: auto 0;
+  text-align: center;
 }
 
 #container #logo .content {
-  position: absolute;
-  top:255px;
+  width: 300px;
 }
 
 #container #logo #leftLinks {
-  position: absolute;
-  top:375px;
   font-size: 12px;
-  margin: 40 20px;
+  margin: 60 20 40 20px;
+  display: block;
 }
 
-#container #logo #leftLinks #getStartedButton {
-  padding: 6 10px;
-    background:#cecece;
+.buttons {
+  padding: 20 10px;
+    background:#3ab54a;
     cursor: pointer;
-    border: #999 1px solid;
+    border: green 1px solid;
     border-radius: 5px;
-    margin: 10 0px;
-    font-size: 30px;
+    margin: 15 70px;
+    font-size: 20px;
     text-align: center;
+    color: #eee;
+    opacity: 0.9;
+    font-family: 'Comfortaa', 'cursive';
+    width: 400px;
 }
-#container #logo #leftLinks #getStartedButton:hover {
-  background: #eee;
+
+.buttons:hover {
+  opacity: 1;
 }
 #container #logo #leftLinks #getStartedButton a {
-  color: #2c3e50;
+  color: #eee;
   text-decoration: none;
 }
 #container #logo #leftLinks li {
@@ -95,12 +101,13 @@ textarea {
 
 #container #logo #double {
   font-size: 70%;
-  margin-left: 50px;
+  margin-left: 100px;
 }
 
 #container #logo #sha {
   text-align: right;
   margin-top: -20px;
+  margin-left: 250px;
   font-family: 'Varela Round', 'sans-serif';
 }
 
@@ -111,97 +118,67 @@ textarea {
 /*FORM SHIT*/
 
 #container #form {
-  width: 49%;
-  display: inline-block;
-  padding:200 0px;
+  width: 400px;
+  display: none;
+  padding:20 0px;
+  margin:auto;
 }
 
-#container #form #form-header {
-  text-align: center;
-  width: 425px;
-  font-size: 30px;
-  color:#dcdcdc;
+#backHome {
+  width: 40px;
+  margin: 20px 10px -110px;
+  display: none;
 }
 
 #container #form input{
   padding: 20 10px;
-  width: 425px;
-  margin:10 0px;
+  width: 400px;
+  margin: 15 0px;
   font-size: 20px;
 }
 
 #container #form #submitButton {
-letter-spacing: 10px;
-  position: relative;
-  padding: 20 0px;
-  font-size: 22px;
-  color: white;
-  text-align: center;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-  background: #3ab54a;
-  border: 0;
-  border-radius: 2px;
-  width: 425px;
-  cursor: pointer;
-  -webkit-box-shadow: inset 0 -2px #28be68;
-  box-shadow: inset 0 -2px #28be68;
-  opacity: 0.9;
-}
-#container #form #submitButton:hover {
-  opacity: 1;
-}
-#container #form #submitButton:active {
-  top: 1px;
-  outline: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
+  margin:auto 0;
+  width: 380px;
+  margin-top:10px;
 }
 #container #form #advanceButton {
   color: #ccc;
   cursor: pointer;
   text-decoration: underline;
+  width: 400px;
+  margin:auto 0;
 }
 #container #form #advanceButton:hover {
   color: #fff;
 }
 #container #form #advanceMenu {
-  height: 0px;
+  /*height: 0px;*/
+  display: none;
 }
 
 /*RESPONSE SHIT*/
 #container #response {
-  width: 49%;
-  display: inline-block;
-  padding:200 0px;
-  display:none;
+  width: 400px;
+  display: none;
+  padding:20 0px;
   color: #f2f3f4;
+  margin:auto;
 }
 
 #container #response #goBack {
-letter-spacing: 10px;
-  position: relative;
-  padding: 20 0px;
-  font-size: 22px;
-  color: white;
-  text-align: center;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-  background: #3ab54a;
-  border: 0;
-  border-radius: 2px;
-  width: 425px;
-  cursor: pointer;
-  -webkit-box-shadow: inset 0 -2px #28be68;
-  box-shadow: inset 0 -2px #28be68;
-  opacity: 0.9;
+  margin:auto 0;
+  width: 380px;
+  margin-top:10px;
 }
-#container #response #goBack:hover {
-  opacity: 1;
-}
-#container #response #goBack:active {
-  top: 1px;
-  outline: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
+
+#container #responseURI {
+  width: 380px;
+  padding: 20 10px;
+  font-size: 20px;
+  background: #f2f3f4;
+  color: #999;
+  border-radius: 5px;
 }
 
 #getStarted {
