@@ -1,3 +1,11 @@
+//home
+$("#showForm").click(function (e) {
+  e.preventDefault();
+  $("#logo").hide();
+  $("#form").fadeIn();
+});
+
+//form
 $("#submitButton").click(function (e) {
   var apiUri = "/create",
     isInvalidForm = checkForm();

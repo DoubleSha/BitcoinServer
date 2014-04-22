@@ -12,46 +12,50 @@ textarea {
 }
 
 #container {
-  width: 70%;
+  width: 600px;
   margin: 0 auto;
+  margin-top: 200px;
 }
 
 /*LOGO SHIT*/
 
 #container #logo {
-  width: 49%;
+  width: 100%;
   display: inline-block;
   font-size: 70px;
-  margin: auto;
+  margin: auto 0;
+  text-align: center;
 }
 
 #container #logo .content {
-  position: absolute;
-  top:255px;
+  width: 300px;
 }
 
 #container #logo #leftLinks {
-  position: absolute;
-  top:375px;
   font-size: 12px;
-  margin: 40 20px;
+  margin: 60 20 40 20px;
 }
 
-#container #logo #leftLinks #getStartedButton {
-  padding: 6 10px;
-    background:#cecece;
+.buttons {
+  padding: 20 10px;
+    background:#3ab54a;
     cursor: pointer;
-    border: #999 1px solid;
+    border: green 1px solid;
     border-radius: 5px;
-    margin: 10 0px;
-    font-size: 30px;
+    margin: 15 70px;
+    font-size: 20px;
     text-align: center;
+    color: #eee;
+    opacity: 0.9;
+    font-family: 'Comfortaa', 'cursive';
+    width: 400px;
 }
-#container #logo #leftLinks #getStartedButton:hover {
-  background: #eee;
+
+.buttons:hover {
+  opacity: 1;
 }
 #container #logo #leftLinks #getStartedButton a {
-  color: #2c3e50;
+  color: #eee;
   text-decoration: none;
 }
 #container #logo #leftLinks li {
@@ -95,12 +99,13 @@ textarea {
 
 #container #logo #double {
   font-size: 70%;
-  margin-left: 50px;
+  margin-left: 100px;
 }
 
 #container #logo #sha {
   text-align: right;
   margin-top: -20px;
+  margin-left: 250px;
   font-family: 'Varela Round', 'sans-serif';
 }
 
@@ -111,8 +116,8 @@ textarea {
 /*FORM SHIT*/
 
 #container #form {
-  width: 49%;
-  display: inline-block;
+  width: 100%;
+  display: none;
   padding:200 0px;
 }
 
