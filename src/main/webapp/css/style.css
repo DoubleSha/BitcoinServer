@@ -123,10 +123,10 @@ textarea {
   margin:auto;
 }
 
-#container #form #form-header {
-  text-align: center;
-  font-size: 30px;
-  color:#dcdcdc;
+#backHome {
+  width: 40px;
+  margin: 20px 10px -110px;
+  display: none;
 }
 
 #container #form input{

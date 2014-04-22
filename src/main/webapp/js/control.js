@@ -3,9 +3,18 @@ $("#showForm").click(function (e) {
   e.preventDefault();
   $("#leftLinks").hide();
   $("#form").fadeIn();
+  $("#backHome").fadeIn();
 });
 
 //form
+
+$("#backHome").click(function (e) {
+  e.preventDefault();
+  $("#form").hide();
+  $("#backHome").hide();
+  $("#leftLinks").fadeIn();
+});
+
 $("#submitButton").click(function (e) {
   var apiUri = "/create",
     isInvalidForm = checkForm();
