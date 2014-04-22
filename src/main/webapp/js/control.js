@@ -58,6 +58,7 @@ $("#goBack").click(function () {
     opacity: 0
   });
   $("#form").fadeIn();
+  $("#backHome").fadeIn();
 });
 
 $("#advanceButton").click(function () {
