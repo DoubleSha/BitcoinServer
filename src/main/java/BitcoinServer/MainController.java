@@ -29,6 +29,7 @@ public class MainController {
     private final Logger log = LoggerFactory.getLogger(MainController.class);
     private final String BASE_URL = "http://dblsha.com/";
 //    private final String BASE_URL = "http://173.8.166.105:8080/";
+    final private static char[] hexArray = "0123456789abcdef".toCharArray();
 
     @Autowired
     private PaymentRequestDbService paymentRequestDbService;
@@ -48,40 +49,38 @@ public class MainController {
         if (request == null)
             throw new ValidationException("Invalid CreatePaymentRequestRequest " + request);
         String hash = request.hash();
-        // TODO: Enable this.
-//        String existingId = findPaymentRequestIdByHash(hash);
-//        if (existingId != null) {
-//            log.info("Created payment request using existing entry {}", existingId);
-//            response.setUri(new URI("bitcoin:?r=" + BASE_URL + "p" + existingId));
-//            return response;
-//        }
-        String id = uniquePaymentRequestId(hash);
-        if (id == null)
-            throw new ValidationException("Could not generate unique id");
-        PaymentRequest paymentRequest = newPaymentRequest(request, id);
-        paymentRequestDbService.insertPaymentRequest(id, hash, paymentRequest, request.getAckMemo());
-        response.setUri(new URI("bitcoin:?r=" + BASE_URL + "p" + id));
-        log.info("/create request {} response {}", request, response);
-        return response;
-    }
-
-    final private static char[] hexArray = "0123456789abcdef".toCharArray();
-    private String uniquePaymentRequestId(String hash) throws InvalidProtocolBufferException {
-        String baseId = new String(Base64.encodeBase64(hash.getBytes())).substring(0, 6);
-        String id = baseId;
-        PaymentRequest paymentRequest = paymentRequestDbService.findPaymentRequestById(id);
+        String id = paymentRequestIdFromHash(hash);
         int hexIndex = 0;
-        while (paymentRequest != null && hexIndex < 16) {
-            log.warn("Duplication payment_request_id found {}. Trying hexIndex {}", id, hexIndex);
-            id = baseId + hexArray[hexIndex++];
-            paymentRequest = paymentRequestDbService.findPaymentRequestById(id);
+        PaymentRequestEntry existingEntry = paymentRequestDbService.findEntryById(id);
+        while (existingEntry != null && hexIndex < 16) {
+            if (hash.equals(existingEntry.getPaymentRequestHash())) {
+                log.info("/create Using existing entry with id {}", existingEntry.getId());
+                response.setUri(bitcoinUriFromId(existingEntry.getId()));
+                return response;
+            }
+            if (hexIndex == 0)
+                log.warn("/create Duplication PaymentRequestEntry found for id {}", id);
+            else
+                log.warn("/create Duplication PaymentRequestEntry found for id {}{}", id, hexArray[hexIndex]);
+            existingEntry = paymentRequestDbService.findEntryById(id + hexArray[hexIndex]);
+            if (existingEntry == null) {
+                id = id + hexArray[hexIndex];
+                break;
+            }
+            hexIndex++;
         }
-        if (hexIndex >= 16) {
-            log.error("Could not create new unique payment_request_id for hash {}", hash);
-            return null;
-        }
-        log.debug("Created new payment_request_id {}", id);
-        return id;
+        if (hexIndex >= 16)
+            throw new VerificationException("Failed to create new entry for id " + id);
+        PaymentRequestEntry entry = new PaymentRequestEntry();
+        PaymentRequest paymentRequest = newPaymentRequest(request, id);
+        entry.setId(id);
+        entry.setPaymentRequestHash(hash);
+        entry.setPaymentRequest(paymentRequest);
+        entry.setAckMemo(request.getAckMemo());
+        paymentRequestDbService.insertEntry(entry);
+        response.setUri(bitcoinUriFromId(id));
+        log.info("/create Succeeded! request {} response {}", request, response);
+        return response;
     }
 
     @RequestMapping(value = "/p{id}",
@@ -89,28 +88,30 @@ public class MainController {
                     produces = "application/bitcoin-paymentrequest")
     public @ResponseBody PaymentRequest getPaymentRequest(@PathVariable String id)
             throws VerificationException, InvalidProtocolBufferException {
-        System.out.println("id " + id);
-        PaymentRequest paymentRequest = paymentRequestDbService.findPaymentRequestById(id);
-        if (paymentRequest == null)
+        PaymentRequestEntry entry = paymentRequestDbService.findEntryById(id);
+        if (entry == null || entry.getPaymentRequest() == null)
             throw new VerificationException("No PaymentRequest found for id " + id);
-        return paymentRequest;
+        // TODO: Verify the payment request.
+        log.info("Serving PaymentRequest for id {}", id);
+        return entry.getPaymentRequest();
     }
 
     @RequestMapping(value = "/pay/{id}",
                     method = RequestMethod.POST,
                     consumes = "application/bitcoin-payment",
                     produces = "application/bitcoin-paymentack")
-    public @ResponseBody PaymentACK
-            pay(@RequestBody Payment payment, @PathVariable String id) throws IOException {
+    public @ResponseBody PaymentACK pay(@RequestBody Payment payment, @PathVariable String id) throws IOException {
         log.info("/pay id {} payment {}", id, payment);
+        PaymentRequestEntry entry = paymentRequestDbService.findEntryById(id);
+        if (entry == null || entry.getPaymentRequest() == null) {
+            log.error("Entry for id {} has null PaymentRequest", id);
+            throw new VerificationException("No PaymentRequest found for id " + id);
+        }
         PaymentACK.Builder ack = PaymentACK.newBuilder();
-        // TODO: Use the ackMemo saved in the db instead of this text.
-        ack.setMemo("Thank you for your payment. It is being processed by the bitcoin network.");
         ack.setPayment(payment);
-        PaymentRequest paymentRequest = paymentRequestDbService.findPaymentRequestById(id);
-        if (paymentRequest == null)
-            throw new VerificationException("Could not find entry for " + id);
-        PaymentDetails paymentDetails = PaymentDetails.newBuilder().mergeFrom(paymentRequest.getSerializedPaymentDetails()).build();
+        if (entry.getAckMemo() != null)
+            ack.setMemo(entry.getAckMemo());
+        PaymentDetails paymentDetails = PaymentDetails.newBuilder().mergeFrom(entry.getPaymentRequest().getSerializedPaymentDetails()).build();
         NetworkParameters params = null;
         if (paymentDetails.getNetwork() == null || paymentDetails.getNetwork().equals("main"))
             params = MainNetParams.get();
@@ -154,6 +155,14 @@ public class MainController {
         return ack.build();
     }
 
+    private String paymentRequestIdFromHash(String hash) {
+        return new String(Base64.encodeBase64(hash.getBytes())).substring(0, 6);
+    }
+
+    private URI bitcoinUriFromId(String id) throws URISyntaxException {
+        return new URI("bitcoin:?r=" + BASE_URL + "p" + id);
+    }
+
     private PaymentRequest newPaymentRequest(CreatePaymentRequestRequest createRequest, String id)
             throws AddressFormatException, VerificationException {
         // TODO: Ask the PaymentRequestNotary server for the payment request instead of creating it here.
@@ -175,81 +184,6 @@ public class MainController {
                 .setPaymentUrl(BASE_URL + "/pay/" + id)
                 .addOutputs(outputBuilder)
                 .setMemo(createRequest.getMemo())
-                .build();
-        return PaymentRequest.newBuilder()
-                .setPaymentDetailsVersion(1)
-                .setPkiType("none")
-                .setSerializedPaymentDetails(paymentDetails.toByteString())
-                .build();
-    }
-
-    @RequestMapping(value = "/test_pay",
-                    method = RequestMethod.POST,
-                    consumes = "application/bitcoin-payment",
-                    produces = "application/bitcoin-paymentack")
-    public @ResponseBody PaymentACK
-            testPay(@RequestBody Payment payment) throws IOException {
-        log.debug("/test_pay payment {}", payment);
-        PaymentACK.Builder ack = PaymentACK.newBuilder();
-        ack.setMemo("Thank you for your payment! It is being processed by the bitcoin network.");
-        ack.setPayment(payment);
-        NetworkParameters params = TestNet3Params.get();
-        // Decode and validate all transactions.
-        ArrayList<Transaction> txs = new ArrayList<Transaction>();
-        for (ByteString encodedTx : payment.getTransactionsList()) {
-            Transaction tx = null;
-            try {
-                tx = new Transaction(params, encodedTx.toByteArray());
-                tx.verify();
-                txs.add(tx);
-            } catch (VerificationException e) {
-                ack.setMemo("Error: Invalid transaction " + e);
-                return ack.build();
-            }
-        }
-        if (txs.isEmpty()) {
-            ack.setMemo("Error: Empty transactions");
-            return ack.build();
-        }
-        // Transactions are valid, now broadcast them.
-        PeerGroup peerGroup = new PeerGroup(params);
-        try {
-            peerGroup.addPeerDiscovery(new DnsDiscovery(params));
-            peerGroup.startAndWait();
-            for (Transaction tx : txs)
-                peerGroup.broadcastTransaction(tx).get();
-        } catch (InterruptedException e) {
-            ack.setMemo("Failed to send transactions: " + e);
-        } catch (ExecutionException e) {
-            ack.setMemo("Failed to send transactions: " + e);
-        }
-        peerGroup.stopAndWait();
-        return ack.build();
-    }
-
-    @RequestMapping(value = "/test_create", produces = "application/bitcoin-paymentrequest")
-    public @ResponseBody PaymentRequest
-            testCreate(@RequestParam(value = "to", required = true) String to,
-                       @RequestParam(value = "amount", required = true) String btc,
-                       @RequestParam(value = "network", required = false) String network,
-                       @RequestParam(value = "memo", required = false) String memo)
-                               throws AddressFormatException, VerificationException {
-        NetworkParameters params = null;
-        if (network == null || network.equals("main"))
-            params = MainNetParams.get();
-        else if (network.equals("test"))
-            params = TestNet3Params.get();
-        if (params == null)
-            throw new VerificationException("Invalid network " + network);
-        Output.Builder outputBuilder = Output.newBuilder()
-                .setAmount(Utils.toNanoCoins(btc).longValue())
-                .setScript(ByteString.copyFrom(ScriptBuilder.createOutputScript(new Address(params, to)).getProgram()));
-        PaymentDetails paymentDetails = PaymentDetails.newBuilder()
-                .setNetwork(network)
-                .setTime(System.currentTimeMillis() / 1000L)
-                .setPaymentUrl(BASE_URL + "test_pay")
-                .addOutputs(outputBuilder)
-                .setMemo(memo)
                 .build();
         return PaymentRequest.newBuilder()
                 .setPaymentDetailsVersion(1)
