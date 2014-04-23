@@ -34,11 +34,10 @@ $("#submitButton").click(function (e) {
       success: function (data) {
         // This outputs the result of the ajax request
         console.log(data);
-        $("#form").fadeOut();
-        $("#responseURI").html(data.uri)
-        $("#response").css({
-          "display": "inline-block"
-        });
+        $("#form").hide();
+        $("#backHome").hide();
+        $("#responseURI").html(data.uri);
+        $("#response").fadeIn();
       }
     });
   } else {
@@ -54,19 +53,17 @@ $("#submitButton").click(function (e) {
 
 $("#goBack").click(function () {
   //hide response and show form
-  $("#response").css({
-    opacity: 0
-  });
+  $("#response").hide();
   $("#form").fadeIn();
   $("#backHome").fadeIn();
+  //clear fields
+  $("#address").val("");
+  $("#amount").val("");
+  $("#memo").val("");
+  $("#ackMemo").val("");
 });
 
 $("#advanceButton").click(function () {
-  // if ($("#advanceMenu").css("opacity") == 0) {
-  //   openMenu();
-  // } else {
-  //   closeMenu();
-  // }
   $("#advanceMenu").slideToggle();
 });
 
