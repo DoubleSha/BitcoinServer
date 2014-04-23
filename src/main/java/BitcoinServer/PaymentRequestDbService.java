@@ -1,9 +1,6 @@
 package BitcoinServer;
 
-import com.datastax.driver.core.BoundStatement;
-import com.datastax.driver.core.PreparedStatement;
-import com.datastax.driver.core.ResultSet;
-import com.datastax.driver.core.Session;
+import com.datastax.driver.core.*;
 import com.datastax.driver.core.exceptions.DriverException;
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.apache.cassandra.utils.Hex;
@@ -22,15 +19,14 @@ public class PaymentRequestDbService {
 
     private final Logger log = LoggerFactory.getLogger(PaymentRequestDbService.class);
     private final String cqlQueryForPaymentRequestById = "SELECT * FROM payment_requests WHERE id = :ID";
-    private final String cqlQueryForPaymentRequestByHash = "SELECT * FROM payment_requests WHERE payment_request_hash = :HASH";
     private final String cqlInsertPaymentRequest =
             "INSERT INTO payment_requests (id,payment_request_hash,payment_request,ack_memo) VALUES (:ID,:HASH,:PAYMENT_REQUEST,:ACK_MEMO)";
 
     @Autowired
     private CqlTemplate cqlTemplate;
 
-    public PaymentRequest findPaymentRequestById(final String id) throws InvalidProtocolBufferException {
-        PaymentRequest paymentRequest = cqlTemplate.query(new PreparedStatementCreator() {
+    public PaymentRequestEntry findEntryById(final String id) throws InvalidProtocolBufferException {
+        PaymentRequestEntry entry = cqlTemplate.query(new PreparedStatementCreator() {
                 @Override
                 public PreparedStatement createPreparedStatement(Session session) throws DriverException {
                     PreparedStatement ps = session.prepare(cqlQueryForPaymentRequestById);
@@ -43,55 +39,33 @@ public class PaymentRequestDbService {
                     bs.setString("ID", id);
                     return bs;
                 }
-            }, new ResultSetExtractor<PaymentRequest>() {
+            }, new ResultSetExtractor<PaymentRequestEntry>() {
                 @Override
-                public @Nullable PaymentRequest extractData(ResultSet resultSet) throws DriverException, DataAccessException {
+                public @Nullable PaymentRequestEntry extractData(ResultSet resultSet) throws DriverException, DataAccessException {
+                    PaymentRequestEntry entry = new PaymentRequestEntry();
                     if (resultSet == null || resultSet.isExhausted())
                         return null;
-                    String encodedPaymentRequest = resultSet.one().getString("payment_request");
+                    Row row = resultSet.one();
+                    entry.setId(row.getString("id"));
+                    String encodedPaymentRequest = row.getString("payment_request");
                     try {
-                        return PaymentRequest.newBuilder().mergeFrom(Hex.hexToBytes(encodedPaymentRequest)).build();
+                        entry.setPaymentRequest(PaymentRequest.newBuilder().mergeFrom(Hex.hexToBytes(encodedPaymentRequest)).build());
                     } catch (InvalidProtocolBufferException e) {
                         throw new PaymentRequestDbServiceException("Failed to parse PaymentRequest", e);
                     }
+                    entry.setPaymentRequestHash(row.getString("payment_request_hash"));
+                    entry.setAckMemo(row.getString("ack_memo"));
+                    return entry;
                 }
             });
         if (id == null)
             log.debug("No result found for payment_request id {}", id);
         else
-            log.debug("Found payment_request {} for payment_request_hash {}", paymentRequest, id);
-        return paymentRequest;
+            log.debug("Found entry {} for id {}", entry, id);
+        return entry;
     }
 
-    public String findPaymentRequestIdByHash(final String hash) throws InvalidProtocolBufferException {
-        String id = cqlTemplate.query(new PreparedStatementCreator() {
-                @Override
-                public PreparedStatement createPreparedStatement(Session session) throws DriverException {
-                    return session.prepare(cqlQueryForPaymentRequestByHash);
-                }
-            }, new PreparedStatementBinder() {
-                @Override
-                public BoundStatement bindValues(PreparedStatement ps) throws DriverException {
-                    BoundStatement bs = new BoundStatement(ps);
-                    bs.setString("HASH", hash);
-                    return bs;
-                }
-            }, new ResultSetExtractor<String>() {
-                @Override
-                public @Nullable String extractData(ResultSet resultSet) throws DriverException, DataAccessException {
-                    if (resultSet == null || resultSet.isExhausted())
-                        return null;
-                    return resultSet.one().getString("id");
-                }
-            });
-        if (id == null)
-            log.debug("No entry found for payment_request_hash {}", hash);
-        else
-            log.debug("Found payment_request_id {} for payment_request_hash {}", id, hash);
-        return id;
-    }
-
-    public void insertPaymentRequest(final String id, final String hash, final PaymentRequest paymentRequest, @Nullable final String ackMemo) {
+    public void insertEntry(final PaymentRequestEntry entry) {
         cqlTemplate.query(new PreparedStatementCreator() {
                 @Override
                 public PreparedStatement createPreparedStatement(Session session) throws DriverException {
@@ -101,11 +75,11 @@ public class PaymentRequestDbService {
                 @Override
                 public BoundStatement bindValues(PreparedStatement ps) throws DriverException {
                     BoundStatement bs = new BoundStatement(ps);
-                    bs.setString("ID", id);
-                    bs.setString("HASH", hash);
-                    bs.setString("PAYMENT_REQUEST", Hex.bytesToHex(paymentRequest.toByteArray()));
-                    if (ackMemo != null)
-                        bs.setString("ACK_MEMO", ackMemo);
+                    bs.setString("ID", entry.getId());
+                    bs.setString("HASH", entry.getPaymentRequestHash());
+                    bs.setString("PAYMENT_REQUEST", Hex.bytesToHex(entry.getPaymentRequest().toByteArray()));
+                    if (entry.getAckMemo() != null)
+                        bs.setString("ACK_MEMO", entry.getAckMemo());
                     return bs;
                 }
             }, new ResultSetExtractor<ResultSet>() {
@@ -114,7 +88,7 @@ public class PaymentRequestDbService {
                     return resultSet;
                 }
             });
-        log.debug("Inserted payment_request with id {} ackMemo {}", id, ackMemo);
+        log.debug("Inserted payment_request with entry {}", entry);
     }
 
     public static class PaymentRequestDbServiceException extends DataAccessException {
