@@ -28,8 +28,8 @@ $("#submitButton").click(function (e) {
       data: JSON.stringify({
         'address': $('#address').val() || 'invalidAddress',
         'amount': $('#amount').val() * 100000 || 0,
-        'memo': $('#memo').val() || 'Click or tap "Send" to broadcast payment',
-        'ackMemo': $('#ackMemo').val() || 'Thanks! Your payment is being processed by the Bitcoin network. Create your own Bitcoin link at DoubleSha.com.'
+        'memo': $('#memo').val() || 'Satoshi would be proud',
+        'ackMemo': $('#ackMemo').val() || 'Thanks! Your payment was received and is being processed by the Bitcoin network. Create your own Bitcoin link at DoubleSha.com.'
       }),
       success: function (data) {
         // This outputs the result of the ajax request
