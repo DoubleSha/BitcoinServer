@@ -33,7 +33,6 @@ $("#submitButton").click(function (e) {
       }),
       success: function (data) {
         // This outputs the result of the ajax request
-        console.log(data);
         $("#form").hide();
         $("#backHome").hide();
         $("#responseURI").html(data.uri);
@@ -48,17 +47,27 @@ $("#submitButton").click(function (e) {
         });
         var client = new ZeroClipboard($("#copyButton"));
 
-        client.on("ready", function (readyEvent) {
-          console.log("ZeroClipboard SWF is ready!");
+        // client.on("ready", function (readyEvent) {
+        //   console.log("ZeroClipboard SWF is ready!");
 
-          client.on('dataRequested', function (client, args) {
-            client.setText(data.uri);
-          });
+        //   client.on('dataRequested', function (client, args) {
+        //     client.setText(data.uri);
+        //   });
 
-          client.on("aftercopy", function (event) {
-            console.log("Copied text to clipboard: " + event.data["text/plain"]);
-          });
-        });
+        //   client.on("aftercopy", function (event) {
+        //     console.log("Copied text to clipboard: " + event.data["text/plain"]);
+        //   });
+        // });
+
+        //tipsy
+        // $('#copyButton').tipsy({
+        //   gravity: 'w'
+        // });
+
+        // $("#copyButton").click(function (e) {
+        //   e.preventDefault();
+        //   $("#copyButton").attr("title", "copied");
+        // });
       }
     });
   } else {
