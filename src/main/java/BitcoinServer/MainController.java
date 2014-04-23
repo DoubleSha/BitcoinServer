@@ -174,7 +174,7 @@ public class MainController {
                 .setTime(System.currentTimeMillis() / 1000L)
                 .setPaymentUrl(BASE_URL + "/pay/" + id)
                 .addOutputs(outputBuilder)
-                .setMemo(network)
+                .setMemo(createRequest.getMemo())
                 .build();
         return PaymentRequest.newBuilder()
                 .setPaymentDetailsVersion(1)
