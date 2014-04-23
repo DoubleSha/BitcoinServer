@@ -1,10 +1,11 @@
 <head>
-  <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="http://yui.yahooapis.com/combo?pure/0.4.2/base-min.css&pure/0.4.2/forms-min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/alertify.js/0.3.11/alertify.core.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/alertify.js/0.3.11/alertify.default.css">
   <link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Comfortaa:300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <div id="container">
@@ -14,14 +15,11 @@
         <div id="sha" class="bold white loose">Sha</div>
       </div>
       <div id="leftLinks">
-        <div id="getStartedButton">
-          <a class="fancyLinks" data-fancybox-type="inline" href="#getStarted">HOW IT WORKS</a>
+        <div id="getStartedButton" class="buttons fancyLinks" data-fancybox-type="inline" href="#getStarted">HOW IT WORKS
         </div>
+        <div id="showForm" class="buttons">CREATE BITCOIN URL</div>
         <li class="firstList">
           &copy;2014 DoubleSha
-        </li>
-        <li>
-              <a class="fancyLinks" data-fancybox-type="iframe" href="faq.html">FAQ</a>
         </li>
         <li>
           <a class="fancyLinks" data-fancybox-type="iframe" href="about.html">About</a>
@@ -30,18 +28,18 @@
       </div>
     </div>
     <!-- Form -->
+    <div id="backHome" class="buttons">&lt;</div>
     <div id="form">
-      <div id="form-header">Create Bitcoin Link</div>
       <form class="pure-form pure-form-stacked">
         <fieldset>
           <input id="address" type="text" placeholder="Address">
           <input id="amount" type="text" placeholder="Amount (mBTC)">
           <div id="advanceButton">Customize it!</div>
-          <div id="advanceMenu" class="hidden">
+          <div id="advanceMenu">
             <textarea id="memo" placeholder="Message (example: Please tip me with this link created at dblsha.com)"></textarea>
             <textarea id="ackMemo" placeholder="Receipt Message (example: Thank you so much for the tip!)"></textarea>
           </div>
-          <div id="submitButton">SUBMIT</div>
+          <div id="submitButton" class="buttons">SUBMIT</div>
         </fieldset>
       </form>
     </div>
@@ -50,7 +48,7 @@
     <div id="response">
       <h1>Here's your Bitcoin URL:</h1>
       <div id="responseURI"></div>
-      <div id="goBack">Start Over</div>
+      <div id="goBack" class="buttons">START OVER</div>
     </div>
   </div>
 
