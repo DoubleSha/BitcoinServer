@@ -171,14 +171,31 @@ textarea {
   width: 380px;
   margin-top:10px;
 }
+#container #urlSection {
+  position: relative;
+}
 
-#container #responseURI {
-  width: 380px;
+#container #urlSection #responseURI {
+  width: 345px;
   padding: 20 10px;
   font-size: 20px;
   background: #f2f3f4;
   color: #999;
   border-radius: 5px;
+}
+
+#container #urlSection #copyButton {
+  background: #57585a url("../images/copy.png") no-repeat right top;
+  background-size:32px;
+  height: 32px;
+  width: 32px;
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 5 0px;
+  position: absolute;
+  top:12px;
+  right:0px;
 }
 
 #getStarted {
