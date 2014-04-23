@@ -32,6 +32,4 @@ function checkForm() {
   } else {
     return false;
   }
-  // => {"creditCardNumber": ["Credit card number is the wrong length (should be 16 characters)"]}
-
 }

@@ -37,7 +37,28 @@ $("#submitButton").click(function (e) {
         $("#form").hide();
         $("#backHome").hide();
         $("#responseURI").html(data.uri);
+        // $(".twitter-share").attr("data-text", 'Send Bitcoin to me at: ' + data.uri + ' @dblsha');
+        $("#copyButton").attr("data-clipboard-text", data.uri);
         $("#response").fadeIn();
+        // Socialite.load($("#social"));
+
+        // copy to clipboard
+        ZeroClipboard.config({
+          moviePath: 'ZeroClipboard.swf',
+        });
+        var client = new ZeroClipboard($("#copyButton"));
+
+        client.on("ready", function (readyEvent) {
+          console.log("ZeroClipboard SWF is ready!");
+
+          client.on('dataRequested', function (client, args) {
+            client.setText(data.uri);
+          });
+
+          client.on("aftercopy", function (event) {
+            console.log("Copied text to clipboard: " + event.data["text/plain"]);
+          });
+        });
       }
     });
   } else {
