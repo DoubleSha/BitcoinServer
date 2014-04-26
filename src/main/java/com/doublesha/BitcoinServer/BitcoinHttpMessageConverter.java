@@ -33,7 +33,7 @@ public class BitcoinHttpMessageConverter extends AbstractHttpMessageConverter<Me
         try {
             InputStream in = inputMessage.getBody();
             Method newBuilder = clazz.getMethod("newBuilder");
-            GeneratedMessage.Builder<?> builder = (GeneratedMessage.Builder<?>)newBuilder.invoke(clazz);
+            GeneratedMessage.Builder builder = (GeneratedMessage.Builder)newBuilder.invoke(clazz);
             Message msg = builder.mergeFrom(in).build();
             return msg;
         } catch (Exception e) {

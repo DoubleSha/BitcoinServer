@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -23,7 +24,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-@RestController
+@Controller
 public class MainController {
 
     private final Logger log = LoggerFactory.getLogger(MainController.class);
@@ -34,12 +35,17 @@ public class MainController {
     @Autowired
     private PaymentRequestDbService paymentRequestDbService;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping("/")
     public ModelAndView index() {
-        return new ModelAndView("index.html");
+        return new ModelAndView("index");
     }
 
-    @RequestMapping(value = "/create",
+    @RequestMapping(value = "/{id:[a-zA-Z0-9_-]{6,7}}")
+    public ModelAndView payButton(@PathVariable String id) throws URISyntaxException {
+        return new ModelAndView("paybutton", "bitcoinUri", bitcoinUriFromId(id).toString());
+    }
+
+    @RequestMapping(value = "/api/create",
                     method = RequestMethod.POST,
                     consumes = MediaType.APPLICATION_JSON_VALUE,
                     produces = MediaType.APPLICATION_JSON_VALUE)
@@ -55,7 +61,7 @@ public class MainController {
         while (existingEntry != null && hexIndex < 16) {
             if (hash.equals(existingEntry.getPaymentRequestHash())) {
                 log.info("/create Using existing entry with id {}", existingEntry.getId());
-                response.setUri(bitcoinUriFromId(existingEntry.getId()));
+                response.setUri(shortUriFromId(id));
                 return response;
             }
             if (hexIndex == 0)
@@ -78,12 +84,12 @@ public class MainController {
         entry.setPaymentRequest(paymentRequest);
         entry.setAckMemo(request.getAckMemo());
         paymentRequestDbService.insertEntry(entry);
-        response.setUri(bitcoinUriFromId(id));
+        response.setUri(shortUriFromId(id));
         log.info("/create Succeeded! request {} response {}", request, response);
         return response;
     }
 
-    @RequestMapping(value = "/p{id}",
+    @RequestMapping(value = "/payreq/{id:[a-zA-Z0-9_-]{6,7}}",
                     method = RequestMethod.GET,
                     produces = "application/bitcoin-paymentrequest")
     public @ResponseBody PaymentRequest getPaymentRequest(@PathVariable String id)
@@ -96,7 +102,7 @@ public class MainController {
         return entry.getPaymentRequest();
     }
 
-    @RequestMapping(value = "/pay/{id}",
+    @RequestMapping(value = "/pay/{id:[a-zA-Z0-9_-]{6,7}}",
                     method = RequestMethod.POST,
                     consumes = "application/bitcoin-payment",
                     produces = "application/bitcoin-paymentack")
@@ -159,8 +165,12 @@ public class MainController {
         return new String(Base64.encodeBase64(hash.getBytes())).substring(0, 6);
     }
 
+    private URI shortUriFromId(String id) throws URISyntaxException {
+        return new URI(BASE_URL + id);
+    }
+
     private URI bitcoinUriFromId(String id) throws URISyntaxException {
-        return new URI("bitcoin:?r=" + BASE_URL + "p" + id);
+        return new URI("bitcoin:?r=" + BASE_URL + "payreq/" + id);
     }
 
     private PaymentRequest newPaymentRequest(CreatePaymentRequestRequest createRequest, String id)

@@ -1,0 +1,30 @@
+<head>
+  <title>DoubleSha.com - One Click To Pay</title>
+  <link rel="stylesheet" href="http://yui.yahooapis.com/combo?pure/0.4.2/base-min.css%26pure/0.4.2/forms-min.css" />
+  <link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css' />
+  <link href='http://fonts.googleapis.com/css?family=Comfortaa:300' rel='stylesheet' type='text/css' />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body xmlns:th="http://www.thymeleaf.org">
+  <div id="container">
+    <div id="logo">
+      <div class="content">
+        <div id="double" class="light white loose">Double</div>
+        <div id="sha" class="bold white loose">Sha</div>
+      </div>
+      <div id="leftLinks">
+        <a class="buttons" th:href="@{${bitcoinUri}}">SEND BITCOIN</a>
+        <li class="firstList">
+          &copy;2014 DoubleSha
+        </li>
+        <li>
+          <a class="fancyLinks" data-fancybox-type="iframe" href="../about.html">About</a>
+        </li>
+        <li><a class="fancyLinks" data-fancybox-type="iframe" href="../terms.html">Terms of Service</a></li>
+      </div>
+    </div>
+  </div>
+
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.0.min.js"></script>
+  <script src="js/control.js"></script>
+</body>

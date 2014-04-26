@@ -4,7 +4,7 @@ buildscript {
         mavenLocal()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.0.0.RC5")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.0.1.RELEASE")
     }
 }
 
@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
     compile("org.springframework.boot:spring-boot-starter-actuator")
     compile("org.springframework.data:spring-data-cassandra:1.0.0.BUILD-SNAPSHOT")
     compile("com.google.protobuf:protobuf-java:2.5.0")

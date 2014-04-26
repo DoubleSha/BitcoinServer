@@ -15,8 +15,12 @@ $("#backHome").click(function (e) {
   $("#leftLinks").fadeIn();
 });
 
+$(".clickableElement").click(function () {
+  open($("#bitcoinLink").href);
+});
+
 $("#submitButton").click(function (e) {
-  var apiUri = "/create",
+  var apiUri = "/api/create",
     isInvalidForm = checkForm();
   e.preventDefault();
   if (!isInvalidForm) {

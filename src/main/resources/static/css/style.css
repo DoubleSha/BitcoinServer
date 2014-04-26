@@ -40,17 +40,19 @@ textarea {
 
 .buttons {
   padding: 20 10px;
-    background:#3ab54a;
-    cursor: pointer;
-    border: green 1px solid;
-    border-radius: 5px;
-    margin: 15 70px;
-    font-size: 20px;
-    text-align: center;
-    color: #eee;
-    opacity: 0.9;
-    font-family: 'Comfortaa', 'cursive';
-    width: 400px;
+  background:  #3ab54a;
+  cursor: pointer;
+  border: green 1px solid;
+  border-radius: 5px;
+  margin: 15 70px;
+  font-size: 20px;
+  text-align: center;
+  color: #eee;
+  opacity: 0.9;
+  font-family: 'Comfortaa', 'cursive';
+  width: 400px;
+  text-decoration:  none;
+  display:  block;
 }
 
 .buttons:hover {

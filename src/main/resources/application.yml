@@ -1,0 +1,2 @@
+endpoints.health.id: healthcheck
+endpoints.metrics.id: appmetrics
