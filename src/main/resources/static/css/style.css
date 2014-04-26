@@ -181,21 +181,25 @@ textarea {
   font-size: 20px;
   background: #f2f3f4;
   color: #999;
-  border-radius: 5px;
+  border-radius: 5px 0px 0px 5px;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 #container #urlSection #copyButton {
-  background: #57585a url("../images/copy.png") no-repeat right top;
-  background-size:32px;
-  height: 32px;
+  background: #57585a url("../images/copy.png") no-repeat center center;
+  background-size:27px;
   width: 32px;
   cursor: pointer;
   display: inline-block;
   vertical-align: middle;
-  margin: 5 0px;
+  height: 39px;
+  padding: 10px 0;
   position: absolute;
-  top:12px;
+  top:0px;
   right:0px;
+  border: 1px solid #CCC;
+  border-radius: 0 5px 5px 0;
 }
 
 #getStarted {
