@@ -32,11 +32,6 @@ dependencies {
     testCompile("junit:junit")
 }
 
-// Copy resources into the jar as static content, where Spring expects it.
-jar.into('static') {
-    from('src/main/webapp')
-}
-
 task wrapper(type: Wrapper) {
     gradleVersion = '1.10'
 }

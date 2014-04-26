@@ -59,9 +59,9 @@ public class MainController {
                 return response;
             }
             if (hexIndex == 0)
-                log.warn("/create Duplication PaymentRequestEntry found for id {}", id);
+                log.warn("/create Duplicate PaymentRequestEntry found for id {}", id);
             else
-                log.warn("/create Duplication PaymentRequestEntry found for id {}{}", id, hexArray[hexIndex]);
+                log.warn("/create Duplicate PaymentRequestEntry found for id {}{}", id, hexArray[hexIndex]);
             existingEntry = paymentRequestDbService.findEntryById(id + hexArray[hexIndex]);
             if (existingEntry == null) {
                 id = id + hexArray[hexIndex];
