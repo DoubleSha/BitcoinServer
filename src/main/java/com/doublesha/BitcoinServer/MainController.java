@@ -201,7 +201,7 @@ public class MainController {
         PaymentDetails paymentDetails = PaymentDetails.newBuilder()
                 .setNetwork(network)
                 .setTime(System.currentTimeMillis() / 1000L)
-                .setPaymentUrl(BASE_URL + "/pay/" + id)
+                .setPaymentUrl(BASE_URL + "pay/" + id)
                 .addOutputs(outputBuilder)
                 .setMemo(createRequest.getMemo())
                 .build();
