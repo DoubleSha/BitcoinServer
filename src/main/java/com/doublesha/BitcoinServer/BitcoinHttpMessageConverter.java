@@ -1,4 +1,4 @@
-package BitcoinServer;
+package com.doublesha.BitcoinServer;
 
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.Message;

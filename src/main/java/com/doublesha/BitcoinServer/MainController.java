@@ -1,4 +1,4 @@
-package BitcoinServer;
+package com.doublesha.BitcoinServer;
 
 import com.google.bitcoin.core.*;
 import com.google.bitcoin.net.discovery.DnsDiscovery;

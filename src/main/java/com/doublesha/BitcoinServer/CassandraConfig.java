@@ -1,4 +1,4 @@
-package BitcoinServer;
+package com.doublesha.BitcoinServer;
 
 import org.springframework.cassandra.core.CqlTemplate;
 import org.springframework.context.annotation.Bean;

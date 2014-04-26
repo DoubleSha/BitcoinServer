@@ -1,4 +1,4 @@
-package BitcoinServer;
+package com.doublesha.BitcoinServer;
 
 import org.apache.commons.codec.digest.DigestUtils;
 

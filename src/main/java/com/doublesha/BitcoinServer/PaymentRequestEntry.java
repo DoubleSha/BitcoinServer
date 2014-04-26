@@ -1,4 +1,4 @@
-package BitcoinServer;
+package com.doublesha.BitcoinServer;
 
 import org.bitcoin.protocols.payments.Protos.*;
 

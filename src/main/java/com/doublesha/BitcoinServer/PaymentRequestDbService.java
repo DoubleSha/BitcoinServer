@@ -1,4 +1,4 @@
-package BitcoinServer;
+package com.doublesha.BitcoinServer;
 
 import com.datastax.driver.core.*;
 import com.datastax.driver.core.exceptions.DriverException;
