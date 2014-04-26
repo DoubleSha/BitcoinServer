@@ -6,5 +6,5 @@ CREATE TABLE payment_requests (
   payment_request text,
   ack_memo text,
   addr text,
-  amount text,
+  amount bigint,
 );

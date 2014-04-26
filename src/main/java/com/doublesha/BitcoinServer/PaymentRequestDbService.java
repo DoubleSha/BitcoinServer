@@ -2,6 +2,8 @@ package com.doublesha.BitcoinServer;
 
 import com.datastax.driver.core.*;
 import com.datastax.driver.core.exceptions.DriverException;
+import com.google.bitcoin.core.Address;
+import com.google.bitcoin.core.AddressFormatException;
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.apache.cassandra.utils.Hex;
 import org.bitcoin.protocols.payments.Protos.*;
@@ -13,6 +15,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nullable;
+import java.math.BigInteger;
 
 @Service
 public class PaymentRequestDbService {
@@ -20,7 +23,7 @@ public class PaymentRequestDbService {
     private final Logger log = LoggerFactory.getLogger(PaymentRequestDbService.class);
     private final String cqlQueryForPaymentRequestById = "SELECT * FROM payment_requests WHERE id = :ID";
     private final String cqlInsertPaymentRequest =
-            "INSERT INTO payment_requests (id,payment_request_hash,payment_request,ack_memo) VALUES (:ID,:HASH,:PAYMENT_REQUEST,:ACK_MEMO)";
+            "INSERT INTO payment_requests (id,payment_request_hash,payment_request,ack_memo,addr,amount) VALUES (:ID,:HASH,:PAYMENT_REQUEST,:ACK_MEMO,:ADDR,:AMOUNT)";
 
     @Autowired
     private CqlTemplate cqlTemplate;
@@ -41,7 +44,8 @@ public class PaymentRequestDbService {
                 }
             }, new ResultSetExtractor<PaymentRequestEntry>() {
                 @Override
-                public @Nullable PaymentRequestEntry extractData(ResultSet resultSet) throws DriverException, DataAccessException {
+                public @Nullable PaymentRequestEntry extractData(ResultSet resultSet)
+                        throws DriverException, DataAccessException {
                     PaymentRequestEntry entry = new PaymentRequestEntry();
                     if (resultSet == null || resultSet.isExhausted())
                         return null;
@@ -50,11 +54,15 @@ public class PaymentRequestDbService {
                     String encodedPaymentRequest = row.getString("payment_request");
                     try {
                         entry.setPaymentRequest(PaymentRequest.newBuilder().mergeFrom(Hex.hexToBytes(encodedPaymentRequest)).build());
+                        entry.setPaymentRequestHash(row.getString("payment_request_hash"));
+                        entry.setAckMemo(row.getString("ack_memo"));
+                        entry.setAddr(new Address(null, row.getString("addr")));
+                        entry.setAmount(BigInteger.valueOf(row.getLong("amount")));
                     } catch (InvalidProtocolBufferException e) {
                         throw new PaymentRequestDbServiceException("Failed to parse PaymentRequest", e);
+                    } catch (AddressFormatException e) {
+                        throw new PaymentRequestDbServiceException("Invalid addr", e);
                     }
-                    entry.setPaymentRequestHash(row.getString("payment_request_hash"));
-                    entry.setAckMemo(row.getString("ack_memo"));
                     return entry;
                 }
             });
@@ -80,6 +88,8 @@ public class PaymentRequestDbService {
                     bs.setString("PAYMENT_REQUEST", Hex.bytesToHex(entry.getPaymentRequest().toByteArray()));
                     if (entry.getAckMemo() != null)
                         bs.setString("ACK_MEMO", entry.getAckMemo());
+                    bs.setString("ADDR", entry.getAddr().toString());
+                    bs.setLong("AMOUNT", entry.getAmount().longValue());
                     return bs;
                 }
             }, new ResultSetExtractor<ResultSet>() {

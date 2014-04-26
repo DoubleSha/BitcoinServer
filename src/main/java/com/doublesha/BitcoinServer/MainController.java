@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.xml.bind.ValidationException;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -28,8 +29,8 @@ import java.util.concurrent.ExecutionException;
 public class MainController {
 
     private final Logger log = LoggerFactory.getLogger(MainController.class);
-    private final String BASE_URL = "http://dblsha.com/";
-//    private final String BASE_URL = "http://173.8.166.105:8080/";
+//    private final String BASE_URL = "http://dblsha.com/";
+    private final String BASE_URL = "http://173.8.166.105:8080/";
     final private static char[] hexArray = "0123456789abcdef".toCharArray();
 
     @Autowired
@@ -41,8 +42,14 @@ public class MainController {
     }
 
     @RequestMapping(value = "/{id:[a-zA-Z0-9_-]{6,7}}")
-    public ModelAndView payButton(@PathVariable String id) throws URISyntaxException {
-        return new ModelAndView("paybutton", "bitcoinUri", bitcoinUriFromId(id).toString());
+    public ModelAndView payButton(@PathVariable String id) throws URISyntaxException, InvalidProtocolBufferException {
+        PaymentRequestEntry entry = paymentRequestDbService.findEntryById(id);
+        // TODO: Re-direct to an error page or something.
+        if (entry == null || entry.getAddr() == null) {
+            log.error("/payButton Invalid entry {}", entry.toString());
+            return null;
+        }
+        return new ModelAndView("paybutton", "bitcoinUri", bitcoinUriFromId(id, entry.getAddr(), entry.getAmount()).toString());
     }
 
     @RequestMapping(value = "/api/create",
@@ -83,6 +90,8 @@ public class MainController {
         entry.setPaymentRequestHash(hash);
         entry.setPaymentRequest(paymentRequest);
         entry.setAckMemo(request.getAckMemo());
+        entry.setAddr(new Address(null, request.getAddress()));
+        entry.setAmount(request.getAmount());
         paymentRequestDbService.insertEntry(entry);
         response.setUri(shortUriFromId(id));
         log.info("/create Succeeded! request {} response {}", request, response);
@@ -169,8 +178,9 @@ public class MainController {
         return new URI(BASE_URL + id);
     }
 
-    private URI bitcoinUriFromId(String id) throws URISyntaxException {
-        return new URI("bitcoin:?r=" + BASE_URL + "payreq/" + id);
+    private URI bitcoinUriFromId(String id, Address addr, BigInteger amount) throws URISyntaxException {
+        return new URI("bitcoin:" + addr.toString() + "?r=" + BASE_URL + "payreq/" + id
+                       + "&amount=" + Utils.bitcoinValueToPlainString(amount));
     }
 
     private PaymentRequest newPaymentRequest(CreatePaymentRequestRequest createRequest, String id)
