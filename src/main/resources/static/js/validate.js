@@ -14,7 +14,6 @@ var constraints = {
   Amount: {
     presence: true,
     numericality: {
-      onlyInteger: false,
       greaterThan: 0
     }
   }

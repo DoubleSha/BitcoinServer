@@ -24,6 +24,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 @Controller
 public class MainController {
@@ -116,7 +118,6 @@ public class MainController {
                     consumes = "application/bitcoin-payment",
                     produces = "application/bitcoin-paymentack")
     public @ResponseBody PaymentACK pay(@RequestBody Payment payment, @PathVariable String id) throws IOException {
-        log.info("/pay id {} payment {}", id, payment);
         PaymentRequestEntry entry = paymentRequestDbService.findEntryById(id);
         if (entry == null || entry.getPaymentRequest() == null) {
             log.error("Entry for id {} has null PaymentRequest", id);
@@ -154,20 +155,30 @@ public class MainController {
             ack.setMemo("Error: Empty transactions");
             return ack.build();
         }
+        log.debug("/pay Starting peer group");
         // Transactions are valid, now broadcast them.
-        PeerGroup peerGroup = new PeerGroup(params);
+        PeerGroup peers = new PeerGroup(params);
+        peers.setUserAgent("DoubleSha", "1.0");
         try {
-            peerGroup.addPeerDiscovery(new DnsDiscovery(params));
-            peerGroup.startAndWait();
-            for (Transaction tx : txs)
-                peerGroup.broadcastTransaction(tx).get();
+            peers.addPeerDiscovery(new DnsDiscovery(params));
+            peers.startAndWait();
+            for (Transaction tx : txs) {
+                log.debug("/pay Broadcasting tx {}", tx);
+                // TODO: Use more than one peer. This is going to be fragile if that peer doesn't relay the tx.
+                peers.broadcastTransaction(tx, 1).get(20, TimeUnit.SECONDS);
+            }
         } catch (InterruptedException e) {
             ack.setMemo("Failed to send transactions: " + e);
         } catch (ExecutionException e) {
             ack.setMemo("Failed to send transactions: " + e);
+        } catch (TimeoutException e) {
+            ack.setMemo("Failed to send transactions - Peer timed out: " + e);
         }
-        peerGroup.stopAndWait();
-        return ack.build();
+        log.debug("/pay Stopping peer group");
+        peers.stopAndWait();
+        PaymentACK ackResponse = ack.build();
+        log.info("/pay id {} payment {} ack {}", id, payment, ackResponse.toString());
+        return ackResponse;
     }
 
     private String paymentRequestIdFromHash(String hash) {
