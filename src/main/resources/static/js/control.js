@@ -43,6 +43,8 @@ $("#submitButton").click(function (e) {
         // $(".twitter-share").attr("data-text", 'Send Bitcoin to me at: ' + data.uri + ' @dblsha');
         $("#copyButton").attr("data-clipboard-text", data.uri);
         $("#response").fadeIn();
+        $("#goBack").fadeIn();
+
         // Socialite.load($("#social"));
 
         // copy to clipboard
@@ -88,6 +90,7 @@ $("#submitButton").click(function (e) {
 $("#goBack").click(function () {
   //hide response and show form
   $("#response").hide();
+  $("#goBack").hide();
   $("#form").fadeIn();
   $("#backHome").fadeIn();
   //clear fields

@@ -180,10 +180,11 @@ body {
 #container #urlSection #copyButton {
 	display: none;
 }
-#container #response #goBack {
+#container #goBack {
 	width: 10%;
 	margin: -55px 0px -15px 10%;
 	padding:20 10px;
+	display: none;
 }
 
 #getStarted {

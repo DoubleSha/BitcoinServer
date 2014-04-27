@@ -168,10 +168,10 @@ textarea {
   margin:auto;
 }
 
-#container #response #goBack {
-  margin:auto 0;
-  width: 380px;
-  margin-top:10px;
+#container #goBack {
+  width: 40px;
+  margin: 20px 10px -110px;
+  display: none;
 }
 #container #urlSection {
   position: relative;
