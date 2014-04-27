@@ -1,0 +1,217 @@
+body {
+	background-color: #57585a;
+}
+.pure-form-stacked textarea {
+	width: 80%;
+	height:400px;
+	margin: 20px auto;
+}
+
+.hidden {
+	opacity: 0;
+}
+#container {
+	width: 100%;
+	margin-top: 15%;
+}
+
+/*LOGO SHIT*/
+
+#container #logo {
+	width: 100%;
+	display: block;
+	font-size: 170px;
+	margin: auto 0;
+	text-align: center;
+}
+
+#container #logo .content {
+	width: 320px;
+}
+
+#container #logo #leftLinks {
+	font-size: 40px;
+	margin: 60 20 40 20px;
+	display: block;
+}
+
+.buttons {
+	padding: 20 0px;
+	background: #3ab54a;
+	cursor: pointer;
+	border: green 1px solid;
+	border-radius: 25px;
+	margin: 20px auto;
+	font-size: 60px;
+	text-align: center;
+	color: #eee;
+	font-family: 'Comfortaa', 'cursive';
+	width: 80%;
+	display: block;
+}
+
+#container #logo #leftLinks #getStartedButton a {
+	color: #eee;
+	text-decoration: none;
+}
+#container #logo #leftLinks li {
+	display: inline;
+	padding: 0 5px;
+	border-left: #fff 1px solid;
+}
+
+#container #logo #leftLinks li.firstList {
+	border-left:0;
+	color: #ccc;
+}
+
+#container #logo #leftLinks li a {
+	color: #ccc;
+}
+
+#container #logo .content .bold {
+	font-weight: bold;
+}
+
+#container #logo .content .light {
+	font-weight: lighter;
+}
+
+#container #logo .content .white {
+	color:#f2f3f4;
+}
+
+#container #logo .content .green {
+	color:#3ab54a;
+}
+
+#container #logo .content .dot {
+	font-size: 150%;
+	margin: -15px;
+}
+
+#container #logo #double {
+	font-size: 70%;
+	margin-left: 50%;
+}
+
+#container #logo #sha {
+	text-align: right;
+	margin-top: -20px;
+	margin-left: 100%;
+	font-family: 'Varela Round', 'sans-serif';
+}
+
+#container #logo .content .loose {
+	letter-spacing: 10px;
+}
+
+/*FORM SHIT*/
+
+#container #form {
+	width: 100%;
+	display: none;
+	padding:20 0px;
+	margin:auto;
+	font-size: 60px;
+}
+
+#backHome {
+	width: 10%;
+	margin: -55px 0px -15px 10%;
+	padding:20 10px;
+	display: none;
+}
+
+#container #form input{
+	padding: 20 10px;
+	width: 80%;
+	margin: 20px auto;
+	font-size: 60px;
+}
+
+#container #form #advanceButton {
+	color: #ccc;
+	cursor: pointer;
+	text-decoration: underline;
+	width: 80%;
+	margin: 10px auto;
+}
+#container #form #advanceMenu {
+	/*height: 0px;*/
+	display: none;
+}
+#container #form #submitButton {
+  margin:auto;
+  width: 80%;
+}
+
+/*RESPONSE SHIT*/
+#container #response {
+	width: 100%;
+	display: none;
+	padding:20 0px;
+	color: #f2f3f4;
+	margin:auto;
+}
+
+#container #response h1 {
+	font-size: 50px;
+	width: 80%;
+	margin: 20px auto;
+}
+
+#container #urlSection {
+	position: relative;
+}
+
+#container #urlSection #responseURI {
+	width: 80%;
+	padding: 20 10px;
+	font-size: 60px;
+	background: #f2f3f4;
+	color: #999;
+	border-radius: 25px;
+	overflow: hidden;
+	white-space: nowrap;
+	margin:10px auto;
+}
+
+#container #urlSection #copyButton {
+	display: none;
+}
+#container #response #goBack {
+	padding:20 10px;
+	width: 80%;
+	margin:auto;
+}
+
+#getStarted {
+	display: none;
+	color:#7f8c8d;
+}
+#getStarted p {
+	color: #111;
+}
+#getStarted #vid {
+	margin: auto 0;
+}
+#getStarted .title {
+	font-size: 18px;
+	padding: 5px;
+}
+#getStarted li {
+	display: block;
+	padding: 5px;
+	border: #ccc 1px solid;
+	margin:5px;
+	cursor: pointer;
+}
+#getStarted li.faq div.question {
+	color: #27ae60;
+}
+
+#getStarted li.faq div.answer {
+	display: none;
+	padding: 10px;
+}
