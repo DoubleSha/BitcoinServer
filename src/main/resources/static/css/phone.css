@@ -181,9 +181,9 @@ body {
 	display: none;
 }
 #container #response #goBack {
+	width: 10%;
+	margin: -55px 0px -15px 10%;
 	padding:20 10px;
-	width: 80%;
-	margin:auto;
 }
 
 #getStarted {
