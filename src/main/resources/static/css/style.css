@@ -38,6 +38,14 @@ textarea {
   display: block;
 }
 
+#qrCode {
+  margin: 40px auto 20px;
+  display: block;
+  width: 320;
+  height: 320;
+  text-align: center;
+}
+
 .buttons {
   padding: 20 10px;
   background:  #3ab54a;

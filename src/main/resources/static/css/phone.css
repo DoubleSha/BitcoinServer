@@ -35,6 +35,13 @@ body {
 	display: block;
 }
 
+#qrCode {
+  margin: 80px auto 40px;
+  display:  block;
+  width:  640;
+  height:  640;
+}
+
 .buttons {
 	padding: 20 0px;
 	background: #3ab54a;

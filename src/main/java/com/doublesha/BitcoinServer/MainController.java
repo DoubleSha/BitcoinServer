@@ -7,6 +7,11 @@ import com.google.bitcoin.params.TestNet3Params;
 import com.google.bitcoin.script.ScriptBuilder;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import org.apache.commons.codec.binary.Base64;
 import org.bitcoin.protocols.payments.Protos.*;
 import org.slf4j.Logger;
@@ -18,11 +23,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.xml.bind.ValidationException;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -51,7 +58,10 @@ public class MainController {
             log.error("/payButton Invalid entry {}", entry.toString());
             return null;
         }
-        return new ModelAndView("paybutton", "bitcoinUri", bitcoinUriFromId(id, entry.getAddr(), entry.getAmount()).toString());
+        HashMap<String, Object> objects = new HashMap<String, Object>();
+        objects.put("bitcoinUri", bitcoinUriFromId(id, entry.getAddr(), entry.getAmount()).toString());
+        objects.put("qrImg", BASE_URL + "qr/" + id);
+        return new ModelAndView("paybutton", objects);
     }
 
     @RequestMapping(value = "/api/create",
@@ -117,7 +127,7 @@ public class MainController {
                     method = RequestMethod.POST,
                     consumes = "application/bitcoin-payment",
                     produces = "application/bitcoin-paymentack")
-    public @ResponseBody PaymentACK pay(@RequestBody Payment payment, @PathVariable String id) throws IOException {
+    public @ResponseBody PaymentACK pay(@PathVariable String id, @RequestBody Payment payment) throws IOException {
         PaymentRequestEntry entry = paymentRequestDbService.findEntryById(id);
         if (entry == null || entry.getPaymentRequest() == null) {
             log.error("Entry for id {} has null PaymentRequest", id);
@@ -179,6 +189,21 @@ public class MainController {
         PaymentACK ackResponse = ack.build();
         log.info("/pay id {} payment {} ack {}", id, payment, ackResponse.toString());
         return ackResponse;
+    }
+
+    @RequestMapping(value = "/qr/{id:[a-zA-Z0-9_-]{6,7}}",
+                    method = RequestMethod.GET,
+                    produces = MediaType.IMAGE_PNG_VALUE)
+    public @ResponseBody byte[] qr(@PathVariable String id)
+            throws ValidationException, URISyntaxException, WriterException, IOException {
+        PaymentRequestEntry entry = paymentRequestDbService.findEntryById(id);
+        if (entry == null)
+            throw new ValidationException("/qr No entry found for id " + id);
+        QRCodeWriter writer = new QRCodeWriter();
+        BitMatrix bitMatrix = writer.encode(bitcoinUriFromId(id, entry.getAddr(), entry.getAmount()).toString(), BarcodeFormat.QR_CODE, 240, 240);
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        MatrixToImageWriter.writeToStream(bitMatrix, "png", os);
+        return os.toByteArray();
     }
 
     private String paymentRequestIdFromHash(String hash) {
